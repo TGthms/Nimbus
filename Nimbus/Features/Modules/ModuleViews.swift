@@ -242,6 +242,7 @@ struct ModuleDetailOverlay: View {
             }
             .padding(22)
             .frame(width: 460)
+            .fixedSize(horizontal: true, vertical: true)
             .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 28, style: .continuous)
@@ -251,6 +252,8 @@ struct ModuleDetailOverlay: View {
             .compositingGroup()
             .shadow(color: .black.opacity(0.28), radius: 28, y: 12)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .clipped()
         .transition(.opacity.combined(with: .scale(scale: 0.96, anchor: .center)))
     }
 

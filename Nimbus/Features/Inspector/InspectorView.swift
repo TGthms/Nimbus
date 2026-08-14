@@ -213,6 +213,8 @@ struct InspectorView: View {
                 }
                 .frame(height: 180)
                 .chartXAxis(.hidden)
+                .chartPlotStyle { $0.clipped() }
+                .clipped()
             }
         }
     }

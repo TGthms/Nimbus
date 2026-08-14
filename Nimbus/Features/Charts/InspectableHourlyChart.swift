@@ -52,26 +52,17 @@ struct InspectableHourlyChart: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: compact ? 64 : 160)
                 .clipped()
-                .background(
-                    GeometryReader { geo in
-                        Color.clear.preference(key: ChartWidthKey.self, value: geo.size.width)
-                    }
-                )
-                .onPreferenceChange(ChartWidthKey.self) { plotWidth = $0 }
+                .compositingGroup()
+                .onGeometryChange(for: CGFloat.self) { proxy in
+                    proxy.size.width
+                } action: { plotWidth = $0 }
         }
+        .clipped()
     }
 
     private var chart: some View {
         Chart(hours) { hour in
             let y = ChartInspect.displayY(hour, kind: kind, units: units)
-            if !compact {
-                AreaMark(
-                    x: .value("Time", hour.time),
-                    y: .value("Value", y)
-                )
-                .foregroundStyle(accent.opacity(0.22))
-                .interpolationMethod(.catmullRom)
-            }
             LineMark(
                 x: .value("Time", hour.time),
                 y: .value("Value", y)
@@ -84,6 +75,7 @@ struct InspectableHourlyChart: View {
                 RuleMark(x: .value("Sel", hour.time))
                     .foregroundStyle(.white.opacity(0.45))
                     .lineStyle(StrokeStyle(lineWidth: 1))
+                    .zIndex(-1)
                 PointMark(
                     x: .value("Time", hour.time),
                     y: .value("Value", y)
@@ -162,12 +154,5 @@ struct InspectableHourlyChart: View {
             let pad = max((hi - lo) * 0.14, 1)
             return (lo - pad)...(hi + pad)
         }
-    }
-}
-
-private struct ChartWidthKey: PreferenceKey {
-    nonisolated(unsafe) static var defaultValue: CGFloat = 400
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
     }
 }
