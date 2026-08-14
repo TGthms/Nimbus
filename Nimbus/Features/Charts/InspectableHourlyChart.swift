@@ -13,6 +13,7 @@ struct InspectableHourlyChart: View {
     var hoverTime: Binding<Date?>?
 
     @State private var localHover: Date?
+    @State private var plotWidth: CGFloat = 400
 
     private var hover: Binding<Date?> {
         hoverTime ?? $localHover
@@ -48,7 +49,15 @@ struct InspectableHourlyChart: View {
             }
 
             chart
+                .frame(maxWidth: .infinity)
                 .frame(height: compact ? 64 : 160)
+                .clipped()
+                .background(
+                    GeometryReader { geo in
+                        Color.clear.preference(key: ChartWidthKey.self, value: geo.size.width)
+                    }
+                )
+                .onPreferenceChange(ChartWidthKey.self) { plotWidth = $0 }
         }
     }
 
@@ -60,7 +69,7 @@ struct InspectableHourlyChart: View {
                     x: .value("Time", hour.time),
                     y: .value("Value", y)
                 )
-                .foregroundStyle(accent.opacity(0.18))
+                .foregroundStyle(accent.opacity(0.22))
                 .interpolationMethod(.catmullRom)
             }
             LineMark(
@@ -73,7 +82,7 @@ struct InspectableHourlyChart: View {
 
             if hours.indices.contains(selectedIndex), hours[selectedIndex].time == hour.time {
                 RuleMark(x: .value("Sel", hour.time))
-                    .foregroundStyle(.white.opacity(0.55))
+                    .foregroundStyle(.white.opacity(0.45))
                     .lineStyle(StrokeStyle(lineWidth: 1))
                 PointMark(
                     x: .value("Time", hour.time),
@@ -91,7 +100,7 @@ struct InspectableHourlyChart: View {
             } else {
                 AxisMarks(values: .stride(by: .hour, count: 6)) { _ in
                     AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5)).foregroundStyle(.white.opacity(0.12))
-                    AxisValueLabel(format: .dateTime.hour())
+                    AxisValueLabel(format: .dateTime.hour(.defaultDigits(amPM: .omitted)))
                 }
             }
         }
@@ -99,46 +108,41 @@ struct InspectableHourlyChart: View {
             if compact {
                 AxisMarks(position: .leading, values: .automatic(desiredCount: 2))
             } else {
-                AxisMarks(position: .leading) { _ in
+                AxisMarks(position: .leading, values: .automatic(desiredCount: 4)) { _ in
                     AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5)).foregroundStyle(.white.opacity(0.1))
                     AxisValueLabel()
                 }
             }
         }
         .chartYScale(domain: yDomain ?? automaticDomain)
-        .chartXSelection(value: hover)
-        .chartOverlay { proxy in
-            GeometryReader { geo in
-                Rectangle()
-                    .fill(.clear)
-                    .contentShape(Rectangle())
-                    .onContinuousHover { phase in
-                        switch phase {
-                        case .active(let location):
-                            setHover(atX: location.x, proxy: proxy, width: geo.size.width)
-                        case .ended:
-                            hover.wrappedValue = nil
-                        }
-                    }
-                    .gesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { value in
-                                setHover(atX: value.location.x, proxy: proxy, width: geo.size.width)
-                            }
-                            .onEnded { _ in
-                                hover.wrappedValue = nil
-                            }
-                    )
+        .chartLegend(.hidden)
+        .chartPlotStyle { plot in
+            plot.clipped()
+        }
+        .contentShape(Rectangle())
+        .gesture(
+            DragGesture(minimumDistance: 0)
+                .onChanged { value in
+                    applyHover(x: value.location.x, width: plotWidth)
+                }
+                .onEnded { _ in
+                    hover.wrappedValue = nil
+                }
+        )
+        .onContinuousHover { phase in
+            switch phase {
+            case .active(let location):
+                applyHover(x: location.x, width: plotWidth)
+            case .ended:
+                hover.wrappedValue = nil
             }
         }
     }
 
-    private func setHover(atX x: CGFloat, proxy: ChartProxy, width: CGFloat) {
-        if let date: Date = proxy.value(atX: x) {
-            hover.wrappedValue = date
-        } else if width > 0 {
-            let i = ChartInspect.nearestIndex(times: times, x: x, width: width)
-            if hours.indices.contains(i) { hover.wrappedValue = hours[i].time }
+    private func applyHover(x: CGFloat, width: CGFloat) {
+        let i = ChartInspect.nearestIndex(times: times, x: Double(x), width: Double(max(width, 1)))
+        if hours.indices.contains(i) {
+            hover.wrappedValue = hours[i].time
         }
     }
 
@@ -151,9 +155,19 @@ struct InspectableHourlyChart: View {
         case .uv: return 0...max(11, hi)
         case .precipitation, .wind, .visibility, .cape, .shortwave:
             return 0...max(hi * 1.15, 1)
+        case .pressure:
+            let pad = max((hi - lo) * 0.2, 0.6)
+            return (lo - pad)...(hi + pad)
         default:
             let pad = max((hi - lo) * 0.14, 1)
             return (lo - pad)...(hi + pad)
         }
+    }
+}
+
+private struct ChartWidthKey: PreferenceKey {
+    nonisolated(unsafe) static var defaultValue: CGFloat = 400
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }

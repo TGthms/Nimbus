@@ -247,6 +247,8 @@ struct ModuleDetailOverlay: View {
                 RoundedRectangle(cornerRadius: 28, style: .continuous)
                     .strokeBorder(.white.opacity(0.22), lineWidth: 1)
             )
+            .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+            .compositingGroup()
             .shadow(color: .black.opacity(0.28), radius: 28, y: 12)
         }
         .transition(.opacity.combined(with: .scale(scale: 0.96, anchor: .center)))

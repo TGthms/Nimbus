@@ -121,7 +121,17 @@ struct InspectorView: View {
                 .frame(height: 170)
                 .chartLegend(position: .bottom, alignment: .leading)
                 .chartYAxis { AxisMarks(position: .leading) }
-                .chartXSelection(value: $modelHover)
+                .chartPlotStyle { $0.clipped() }
+                .clipped()
+                .onContinuousHover { phase in
+                    switch phase {
+                    case .active(let loc):
+                        let i = ChartInspect.nearestIndex(times: times, x: loc.x, width: 340)
+                        if times.indices.contains(i) { modelHover = times[i] }
+                    case .ended:
+                        modelHover = nil
+                    }
+                }
             }
             ForEach(model.modelSeries, id: \.model) { series in
                 let times = Array(series.times.prefix(48))
