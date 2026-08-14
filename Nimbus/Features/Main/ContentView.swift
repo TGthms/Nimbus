@@ -109,7 +109,8 @@ struct ContentView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .animation(NimbusTheme.panelSpring, value: model.expandedModule)
+        .animation(reduceMotion ? .easeOut(duration: 0.12) : NimbusTheme.panelSpring, value: model.expandedModule)
+        .animation(reduceMotion ? .easeOut(duration: 0.12) : NimbusTheme.panelSpring, value: model.inspectorVisible)
     }
 
     @ViewBuilder

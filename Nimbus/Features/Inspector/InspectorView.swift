@@ -3,6 +3,7 @@ import Charts
 
 struct InspectorView: View {
     @ObservedObject var model: AppModel
+    @State private var modelHover: Date?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -87,6 +88,18 @@ struct InspectorView: View {
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
             if !model.modelSeries.isEmpty {
+                let times = Array(model.modelSeries[0].times.prefix(48))
+                let nowIdx = ChartInspect.nowIndex(times: times)
+                let idx = ChartInspect.resolvedIndex(
+                    hover: modelHover.map { ChartInspect.nearestIndex(times: times, target: $0) },
+                    now: nowIdx
+                )
+                let clock = times.indices.contains(idx)
+                    ? WeatherFormatting.hourLabel(times[idx], timeZone: model.selectedSnapshot?.timezone ?? .current)
+                    : "—"
+                Text(clock)
+                    .font(.caption.weight(.semibold))
+                    .opacity(0.7)
                 Chart {
                     ForEach(model.modelSeries, id: \.model) { series in
                         ForEach(Array(series.times.prefix(48).enumerated()), id: \.offset) { index, time in
@@ -99,21 +112,30 @@ struct InspectorView: View {
                             }
                         }
                     }
+                    if times.indices.contains(idx) {
+                        RuleMark(x: .value("Sel", times[idx]))
+                            .foregroundStyle(.primary.opacity(0.35))
+                    }
                 }
                 .frame(height: 170)
                 .chartLegend(position: .bottom, alignment: .leading)
                 .chartYAxis { AxisMarks(position: .leading) }
+                .chartXSelection(value: $modelHover)
             }
             ForEach(model.modelSeries, id: \.model) { series in
-                let nextTemps = series.temperature.prefix(24).compactMap { $0 }
+                let times = Array(series.times.prefix(48))
+                let nowIdx = ChartInspect.nowIndex(times: times)
+                let idx = ChartInspect.resolvedIndex(
+                    hover: modelHover.map { ChartInspect.nearestIndex(times: times, target: $0) },
+                    now: nowIdx
+                )
+                let value = series.temperature[safe: idx] ?? nil
                 HStack {
                     Text(series.title)
                     Spacer()
-                    if let maxT = nextTemps.max() {
-                        Text(WeatherFormatting.temperature(maxT, unit: model.units.temperature))
-                            .font(.caption.monospacedDigit())
-                            .foregroundStyle(.secondary)
-                    }
+                    Text(WeatherFormatting.temperature(value, unit: model.units.temperature))
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(.secondary)
                 }
             }
         }
@@ -126,11 +148,12 @@ struct InspectorView: View {
                 metric("CAPE", snap.current.cape.map { "\(Int($0.rounded())) J/kg" } ?? "—", note: capeNote(snap.current.cape))
                 metric("CIN", snap.current.convectiveInhibition.map { "\(Int($0.rounded())) J/kg" } ?? "—", note: nil)
                 metric("Freezing", snap.current.freezingLevelHeight.map { "\(Int($0.rounded())) m" } ?? "—", note: nil)
-                Chart(snap.hours(limit: 36)) { hour in
-                    LineMark(x: .value("Time", hour.time), y: .value("CAPE", hour.cape ?? 0))
-                }
-                .frame(height: 140)
-                .chartXAxis(.hidden)
+                InspectableHourlyChart(
+                    hours: snap.hours(limit: 24),
+                    kind: .temperature,
+                    units: model.units,
+                    timeZone: snap.timezone
+                )
             }
         }
     }
@@ -143,12 +166,13 @@ struct InspectorView: View {
                 if let today = snap.today, let sum = today.shortwaveRadiationSum {
                     metric("Σ", String(format: "%.1f MJ/m²", sum), note: nil)
                 }
-                Chart(snap.hours(limit: 24)) { hour in
-                    AreaMark(x: .value("Time", hour.time), y: .value("GHI", hour.shortwaveRadiation ?? 0))
-                        .foregroundStyle(Color.orange.opacity(0.35))
-                }
-                .frame(height: 140)
-                .chartXAxis(.hidden)
+                InspectableHourlyChart(
+                    hours: snap.hours(limit: 24),
+                    kind: .uv,
+                    units: model.units,
+                    timeZone: snap.timezone,
+                    accent: .orange
+                )
             }
         }
     }

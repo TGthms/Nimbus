@@ -48,6 +48,8 @@ struct HourlyStripView: View {
     var recipe: SceneRecipe
     var language: AppLanguage = .english
 
+    @State private var hoverTime: Date?
+
     private var hours: [HourlyWeather] {
         if let focusedDay {
             return snapshot.hours(on: focusedDay)
@@ -55,14 +57,49 @@ struct HourlyStripView: View {
         return snapshot.hours(limit: 24)
     }
 
+    private var selectedIndex: Int {
+        let times = hours.map(\.time)
+        if let hoverTime {
+            return ChartInspect.nearestIndex(times: times, target: hoverTime)
+        }
+        return ChartInspect.nowIndex(times: times)
+    }
+
+    private var readout: ChartReadout {
+        ChartInspect.readout(
+            hours: hours,
+            index: selectedIndex,
+            kind: .temperature,
+            units: units,
+            timeZone: snapshot.timezone
+        )
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(focusedDay == nil ? L10n.string("hourly", language: language) : WeatherFormatting.weekday(focusedDay ?? Date(), timeZone: snapshot.timezone))
-                .font(.headline)
-                .padding(.horizontal, 18)
+            HStack {
+                Text(focusedDay == nil ? L10n.string("hourly", language: language) : WeatherFormatting.weekday(focusedDay ?? Date(), timeZone: snapshot.timezone))
+                    .font(.headline)
+                Spacer()
+                Text("\(readout.valueLabel)  \(readout.timeLabel)")
+                    .font(.callout.weight(.semibold).monospacedDigit())
+                    .opacity(0.8)
+            }
+            .padding(.horizontal, 18)
+
+            InspectableHourlyChart(
+                hours: hours,
+                kind: .temperature,
+                units: units,
+                timeZone: snapshot.timezone,
+                accent: Color.white.opacity(0.92)
+            )
+            .padding(.horizontal, 12)
+
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 4) {
-                    ForEach(hours) { hour in
+                    ForEach(Array(hours.enumerated()), id: \.element.id) { index, hour in
+                        let selected = index == selectedIndex
                         VStack(spacing: 8) {
                             Text(WeatherFormatting.hourLabel(hour.time, timeZone: snapshot.timezone))
                                 .font(.caption.weight(.semibold))
@@ -84,6 +121,13 @@ struct HourlyStripView: View {
                         }
                         .frame(width: 58)
                         .padding(.vertical, 10)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .fill(selected ? Color.white.opacity(0.16) : Color.clear)
+                        )
+                        .onHover { inside in
+                            hoverTime = inside ? hour.time : nil
+                        }
                     }
                 }
                 .padding(.horizontal, 12)

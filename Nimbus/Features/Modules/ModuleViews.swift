@@ -234,18 +234,14 @@ struct ModuleDetailOverlay: View {
                     .keyboardShortcut(.cancelAction)
                 }
 
-                ModuleHeader(module: module, snapshot: snapshot, units: units, language: language)
-                    .font(.title)
-
                 detailChart
-                    .frame(height: 200)
 
                 extraCopy
                     .font(.callout)
                     .foregroundStyle(.secondary)
             }
             .padding(22)
-            .frame(width: 440)
+            .frame(width: 460)
             .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 28, style: .continuous)
@@ -254,6 +250,7 @@ struct ModuleDetailOverlay: View {
             .shadow(color: .black.opacity(0.28), radius: 28, y: 12)
         }
         .transition(.opacity.combined(with: .scale(scale: 0.96, anchor: .center)))
+        .animation(NimbusTheme.panelSpring, value: module)
     }
 
     @ViewBuilder
@@ -261,55 +258,19 @@ struct ModuleDetailOverlay: View {
         let hours = snapshot.hours(limit: 24)
         switch module {
         case .precipitation:
-            Chart(hours) { hour in
-                BarMark(
-                    x: .value("Time", hour.time),
-                    y: .value("Precip", units.precipitation.displayFromMM(hour.precipitation ?? 0))
-                )
-                .foregroundStyle(Color(red: 0.45, green: 0.75, blue: 1))
-            }
-            .chartXAxis { AxisMarks(values: .stride(by: .hour, count: 6)) }
+            InspectableHourlyChart(hours: hours, kind: .precipitation, units: units, timeZone: snapshot.timezone)
         case .wind:
-            Chart(hours) { hour in
-                LineMark(x: .value("Time", hour.time), y: .value("Wind", units.wind.displayFromKmh(hour.windSpeed ?? 0)))
-                AreaMark(x: .value("Time", hour.time), y: .value("Wind", units.wind.displayFromKmh(hour.windSpeed ?? 0)))
-                    .foregroundStyle(Color.white.opacity(0.12))
-            }
-            .chartXAxis { AxisMarks(values: .stride(by: .hour, count: 6)) }
+            InspectableHourlyChart(hours: hours, kind: .wind, units: units, timeZone: snapshot.timezone)
         case .uv:
-            Chart(hours) { hour in
-                AreaMark(x: .value("Time", hour.time), y: .value("UV", hour.uvIndex ?? 0))
-                    .foregroundStyle(Color.orange.opacity(0.28))
-                LineMark(x: .value("Time", hour.time), y: .value("UV", hour.uvIndex ?? 0))
-                    .foregroundStyle(Color.orange)
-            }
-            .chartYScale(domain: 0...12)
+            InspectableHourlyChart(hours: hours, kind: .uv, units: units, timeZone: snapshot.timezone, yDomain: 0...12, accent: .orange)
         case .humidity:
-            Chart(hours) { hour in
-                LineMark(x: .value("Time", hour.time), y: .value("RH", hour.humidity ?? 0))
-            }
-            .chartYScale(domain: 0...100)
+            InspectableHourlyChart(hours: hours, kind: .humidity, units: units, timeZone: snapshot.timezone, yDomain: 0...100)
         case .pressure:
-            let values = hours.compactMap(\.pressureMSL)
-            let lo = (values.min() ?? 1000) - 4
-            let hi = (values.max() ?? 1020) + 4
-            Chart(hours) { hour in
-                LineMark(x: .value("Time", hour.time), y: .value("hPa", hour.pressureMSL ?? 0))
-            }
-            .chartYScale(domain: lo...hi)
+            InspectableHourlyChart(hours: hours, kind: .pressure, units: units, timeZone: snapshot.timezone)
         case .visibility:
-            Chart(hours) { hour in
-                LineMark(
-                    x: .value("Time", hour.time),
-                    y: .value("Vis", units.distance == .mile ? (hour.visibility ?? 0) / 1609.344 : (hour.visibility ?? 0) / 1000)
-                )
-            }
+            InspectableHourlyChart(hours: hours, kind: .visibility, units: units, timeZone: snapshot.timezone)
         case .feelsLike:
-            Chart(hours) { hour in
-                LineMark(x: .value("Time", hour.time), y: .value("Apparent", units.temperature.display(hour.apparentTemperature ?? 0)))
-                LineMark(x: .value("Time", hour.time), y: .value("Air", units.temperature.display(hour.temperature ?? 0)))
-                    .foregroundStyle(.secondary)
-            }
+            InspectableHourlyChart(hours: hours, kind: .apparentTemperature, units: units, timeZone: snapshot.timezone)
         case .sunMoon:
             VStack(alignment: .leading, spacing: 8) {
                 if let today = snapshot.today {
