@@ -12,6 +12,42 @@ final class LocaleMotionL10nTests: XCTestCase {
         XCTAssertTrue(UnitPreferences.usesImperial(Locale(identifier: "en_US")))
     }
 
+    /// System Settings can be Region = United States + Measurement = Metric + Temperature = °C.
+    func testUSRegionMetricSystemAndCelsiusFollowsLanguageAndRegion() {
+        let units = UnitPreferences.fromSignals(
+            LocaleUnitSignals(regionCode: "US", measurement: .metric, temperature: .celsius)
+        )
+        XCTAssertEqual(units.temperature, .celsius)
+        XCTAssertEqual(units.wind, .kilometersPerHour)
+        XCTAssertEqual(units.precipitation, .millimeter)
+        XCTAssertEqual(units.distance, .kilometer)
+        XCTAssertFalse(UnitPreferences.usesImperialMeasures(.metric, regionCode: "US"))
+    }
+
+    func testTemperaturePickerIsIndependentOfUSMeasures() {
+        let units = UnitPreferences.fromSignals(
+            LocaleUnitSignals(regionCode: "US", measurement: .us, temperature: .celsius)
+        )
+        XCTAssertEqual(units.temperature, .celsius)
+        XCTAssertEqual(units.wind, .milesPerHour)
+        XCTAssertEqual(units.precipitation, .inch)
+    }
+
+    func testFromSystemHonorsAppleTemperatureUnit() {
+        let celsius = UnitPreferences.fromSystem(
+            locale: Locale(identifier: "en_US"),
+            temperaturePreference: "Celsius"
+        )
+        XCTAssertEqual(celsius.temperature, .celsius)
+        let fahrenheit = UnitPreferences.fromSystem(
+            locale: Locale(identifier: "en_US"),
+            temperaturePreference: "Fahrenheit"
+        )
+        XCTAssertEqual(fahrenheit.temperature, .fahrenheit)
+        XCTAssertEqual(LocaleUnitSignals.parseTemperature("Celsius"), .celsius)
+        XCTAssertEqual(LocaleUnitSignals.parseTemperature("Fahrenheit"), .fahrenheit)
+    }
+
     func testGBAndJPLocalesYieldMetricUnits() {
         for id in ["en_GB", "ja_JP", "fr_FR"] {
             let units = UnitPreferences.fromLocale(Locale(identifier: id))

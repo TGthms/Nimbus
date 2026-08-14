@@ -12,7 +12,7 @@ public struct AppSettings: Hashable, Codable, Sendable {
     public var motion: MotionPreference
 
     public init(
-        units: UnitPreferences = .fromLocale(),
+        units: UnitPreferences = .fromSystem(),
         appearance: AppearanceMode = .scene,
         followPlaceSun: Bool = true,
         menuBarPlaceID: UUID? = nil,

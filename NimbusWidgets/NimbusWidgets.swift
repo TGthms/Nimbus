@@ -119,7 +119,7 @@ struct SnapshotProvider: TimelineProvider, Sendable {
                 DaySlot(weekday: "Today", high: 26, low: 18, symbol: "cloud.sun.fill"),
                 DaySlot(weekday: "Tomorrow", high: 24, low: 17, symbol: "cloud.rain.fill")
             ],
-            units: .fromLocale(),
+            units: .fromSystem(),
             recipe: nil
         )
     }

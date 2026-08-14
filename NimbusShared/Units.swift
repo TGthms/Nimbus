@@ -163,18 +163,24 @@ public struct UnitPreferences: Codable, Hashable, Sendable {
         return self
     }
 
+    /// Region is only a fallback. Language & Region “Measurement system” wins
+    /// (US + Metric must not become mph/in just because the region is US).
     public static func usesImperial(_ locale: Locale) -> Bool {
-        if locale.measurementSystem == .us { return true }
-        if let region = locale.region?.identifier, imperialRegions.contains(region) {
-            return true
-        }
+        usesImperialMeasures(locale.measurementSystem, regionCode: locale.region?.identifier)
+    }
+
+    public static func usesImperialMeasures(_ system: Locale.MeasurementSystem, regionCode: String?) -> Bool {
+        if system == .metric { return false }
+        if system == .us { return true }
+        if system == .uk { return false }
+        if let regionCode, imperialRegions.contains(regionCode) { return true }
         return false
     }
 
-    public static func fromLocale(_ locale: Locale = .current) -> UnitPreferences {
-        let imperial = usesImperial(locale)
+    public static func fromSignals(_ signals: LocaleUnitSignals) -> UnitPreferences {
+        let imperial = usesImperialMeasures(signals.measurement, regionCode: signals.regionCode)
         return UnitPreferences(
-            temperature: imperial ? .fahrenheit : .celsius,
+            temperature: signals.temperature,
             wind: imperial ? .milesPerHour : .kilometersPerHour,
             precipitation: imperial ? .inch : .millimeter,
             distance: imperial ? .mile : .kilometer,
@@ -182,7 +188,49 @@ public struct UnitPreferences: Codable, Hashable, Sendable {
         )
     }
 
+    public static func fromLocale(_ locale: Locale = .current) -> UnitPreferences {
+        fromSignals(.from(locale: locale, temperaturePreference: nil))
+    }
+
+    /// Follows System Settings → Language & Region, including a US region
+    /// with Metric measures and/or Celsius temperature.
+    public static func fromSystem(
+        locale: Locale = .current,
+        temperaturePreference: String? = UserDefaults.standard.string(forKey: "AppleTemperatureUnit")
+    ) -> UnitPreferences {
+        fromSignals(.from(locale: locale, temperaturePreference: temperaturePreference))
+    }
+
     private static let imperialRegions: Set<String> = ["US", "LR", "MM", "PR", "GU", "VI", "AS", "MP"]
+}
+
+public struct LocaleUnitSignals: Equatable, Sendable {
+    public var regionCode: String?
+    public var measurement: Locale.MeasurementSystem
+    public var temperature: TemperatureUnit
+
+    public init(regionCode: String?, measurement: Locale.MeasurementSystem, temperature: TemperatureUnit) {
+        self.regionCode = regionCode
+        self.measurement = measurement
+        self.temperature = temperature
+    }
+
+    public static func from(locale: Locale, temperaturePreference: String?) -> LocaleUnitSignals {
+        let imperial = UnitPreferences.usesImperialMeasures(locale.measurementSystem, regionCode: locale.region?.identifier)
+        let fallbackTemp: TemperatureUnit = imperial ? .fahrenheit : .celsius
+        return LocaleUnitSignals(
+            regionCode: locale.region?.identifier,
+            measurement: locale.measurementSystem,
+            temperature: Self.parseTemperature(temperaturePreference) ?? fallbackTemp
+        )
+    }
+
+    public static func parseTemperature(_ raw: String?) -> TemperatureUnit? {
+        guard let raw else { return nil }
+        if raw.localizedCaseInsensitiveContains("celsius") { return .celsius }
+        if raw.localizedCaseInsensitiveContains("fahrenheit") { return .fahrenheit }
+        return nil
+    }
 }
 
 public enum WeatherFormatting {

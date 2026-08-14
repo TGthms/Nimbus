@@ -96,7 +96,7 @@ struct SettingsView: View {
             get: { model.settings.units.followLocale },
             set: { follow in
                 if follow {
-                    model.applyUnits(.fromLocale())
+                    model.applyUnits(.fromSystem())
                 } else {
                     var units = model.settings.units
                     units.followLocale = false

@@ -28,6 +28,7 @@ final class AppModel: ObservableObject {
 
     private var searchTask: Task<Void, Never>?
     private var refreshTask: Task<Void, Never>?
+    private var watchesSystemUnits = false
 
     var selectedPlace: Place {
         places.first(where: { $0.id == selectedPlaceID }) ?? places.first ?? PopularCities.myLocation
@@ -37,7 +38,9 @@ final class AppModel: ObservableObject {
         snapshots[selectedPlaceID]
     }
 
-    var units: UnitPreferences { settings.units.resolved(against: .current) }
+    var units: UnitPreferences {
+        settings.units.followLocale ? .fromSystem() : settings.units
+    }
 
     var language: AppLanguage {
         LanguageResolver.resolve(preference: settings.language)
@@ -52,8 +55,9 @@ final class AppModel: ObservableObject {
         let loadedSettings = await store.loadSettings()
         settings = loadedSettings
         if settings.units.followLocale {
-            settings.units = .fromLocale()
+            settings.units = .fromSystem()
         }
+        startWatchingSystemUnits()
         places = loadedPlaces
         if !settings.hasCompletedOnboardingSeed {
             places = PopularCities.defaultPlaces()
@@ -256,7 +260,30 @@ final class AppModel: ObservableObject {
 
     func applyUnits(_ units: UnitPreferences) {
         settings.units = units
+        objectWillChange.send()
         Task { await persist() }
+    }
+
+    private func startWatchingSystemUnits() {
+        guard !watchesSystemUnits else { return }
+        watchesSystemUnits = true
+        NotificationCenter.default.addObserver(forName: NSLocale.currentLocaleDidChangeNotification, object: nil, queue: .main) { [weak self] _ in
+            Task { @MainActor in
+                self?.refreshUnitsFromSystemIfNeeded()
+            }
+        }
+        DistributedNotificationCenter.default().addObserver(forName: .init("AppleMeasurementUnits_Notification"), object: nil, queue: .main) { [weak self] _ in
+            Task { @MainActor in
+                self?.refreshUnitsFromSystemIfNeeded()
+            }
+        }
+    }
+
+    func refreshUnitsFromSystemIfNeeded() {
+        guard settings.units.followLocale else { return }
+        let next = UnitPreferences.fromSystem()
+        guard next != settings.units else { return }
+        applyUnits(next)
     }
 
     func loadInspectorIfNeeded() async {
