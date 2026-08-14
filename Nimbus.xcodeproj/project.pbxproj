@@ -1,0 +1,151 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DF7A41CA43C135C90841D156 = { isa = PBXBuildFile; fileRef = 25180552F4880F94AE59578A; };
+		284CD96EC97FEE814F36932C = { isa = PBXBuildFile; fileRef = 9A9434A655C30A0981D53331; };
+		AD7769A49B80B3D1F7BEFC87 = { isa = PBXBuildFile; fileRef = 8EE0E6DE591CE17E0B04AC5F; };
+		C909CACCE46CC6BEDD986787 = { isa = PBXBuildFile; fileRef = 570A4E7C32044C22AFBCD43D; };
+		40EF1DA4C10FE4A1FD2B2247 = { isa = PBXBuildFile; fileRef = 96ECE6FD36D61A17787EF9B9; };
+		C6BA8FC9F06549066CC92B81 = { isa = PBXBuildFile; fileRef = 7E923C05B838B7CE41A9454F; };
+		21D546F2310B0575FAFD4F64 = { isa = PBXBuildFile; fileRef = 4BBFD27BBB834A0C18D27399; };
+		BAE4549C409C602DAE039DF1 = { isa = PBXBuildFile; fileRef = 286E75C673D9553C8EF3D110; };
+		DFB738A3532F8BFF5EA3EA66 = { isa = PBXBuildFile; fileRef = C2764F59FB5668842F656E6B; };
+		735DC5DC31AC3E9D93618BF4 = { isa = PBXBuildFile; fileRef = CAD49689388A42D786D6F285; };
+		801BE92F35394AFAE8CA5D65 = { isa = PBXBuildFile; fileRef = 42D7843A898DADE36DE31685; };
+		6B871DB8F5C9664D1CEA77B3 = { isa = PBXBuildFile; fileRef = 25ABBDD9F2E2903F4C9B4FC9; };
+		8E75F12120688311A126A433 = { isa = PBXBuildFile; fileRef = 03EC9400F4F39D666491A8D1; };
+		36846DA0146820DE73D1B497 = { isa = PBXBuildFile; fileRef = 91405EE554DFC0C84755574C; };
+		1586A32824B96EC9EB087BA1 = { isa = PBXBuildFile; fileRef = BF58850F063A15AF66015B1E; };
+		E6134361EB4405EE221E6972 = { isa = PBXBuildFile; fileRef = CD36536532CB37B389A52A44; };
+		E8FDF7C14A52FF5B6FE7DEEA = { isa = PBXBuildFile; fileRef = B948DD2CC1BDC48C8A847B78; };
+		5DB48A7B7249F963652519F3 = { isa = PBXBuildFile; fileRef = 6797CB6FBE98DBD075A9D2F9; };
+		09F5C65C3F6928DD68DD4BA6 = { isa = PBXBuildFile; fileRef = 1EA3E9208DBB62A12B52A880; };
+		607F099697A93D23FF825ECA = { isa = PBXBuildFile; fileRef = 068FD9A9CB68DCB63BB7EF81; };
+		AB6E3BD912917E6719FD466F = { isa = PBXBuildFile; fileRef = 096C21244BBEB7C24D864745; };
+		21C0AE3F1D9841AECA62A09E = { isa = PBXBuildFile; fileRef = 94DA2C8EEC7EFC7218453CEE; };
+		5469F133B41C6449764D300F = { isa = PBXBuildFile; fileRef = BB354C05D22F77BAFDA89A6E; };
+		97471131DD8D88A58B8B4082 = { isa = PBXBuildFile; fileRef = 92066194DE1DB0A590EF55CF; };
+		965390AAD18D3E8B6B887A9C = { isa = PBXBuildFile; fileRef = 03EC9400F4F39D666491A8D1; };
+		BE08500016785C5F8B372EEF = { isa = PBXBuildFile; fileRef = 91405EE554DFC0C84755574C; };
+		380A4EAD0D0B00448E104CCD = { isa = PBXBuildFile; fileRef = BF58850F063A15AF66015B1E; };
+		4D1A47F423FF9795E95F5F3A = { isa = PBXBuildFile; fileRef = CD36536532CB37B389A52A44; };
+		68A1ED4FDB31CC2B3AA6DBBD = { isa = PBXBuildFile; fileRef = B948DD2CC1BDC48C8A847B78; };
+		CFD8CE9EB55092ADF913BCBE = { isa = PBXBuildFile; fileRef = 6797CB6FBE98DBD075A9D2F9; };
+		9EF8BF1AD60E48BDB959430B = { isa = PBXBuildFile; fileRef = 1EA3E9208DBB62A12B52A880; };
+		F008CD1028A53D7DB05C74B3 = { isa = PBXBuildFile; fileRef = 068FD9A9CB68DCB63BB7EF81; };
+		EA9585F51CD769768331166A = { isa = PBXBuildFile; fileRef = 096C21244BBEB7C24D864745; };
+		AC622BCA852E8C6E947B33EC = { isa = PBXBuildFile; fileRef = 94DA2C8EEC7EFC7218453CEE; };
+		DE37A57B5F5D0408D35CA581 = { isa = PBXBuildFile; fileRef = BB354C05D22F77BAFDA89A6E; };
+		2AD381EB1D80A3EA4F55C405 = { isa = PBXBuildFile; fileRef = 17FC0F33D5D18907CD81170C; };
+		5457AB9FB521F7F7EF0268A3 = { isa = PBXBuildFile; fileRef = E758ED14E4102C008960CE0E; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0DD22CB6C2E8E29B0AF6C12D = { isa = PBXContainerItemProxy; containerPortal = 98F54143AB4E86B28C3AFEE0; proxyType = 1; remoteGlobalIDString = 0710D8988B900A7C43103C98; remoteInfo = NimbusWidgets; };
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F0AB04EE052351C80F3286E9 = { isa = PBXCopyFilesBuildPhase; buildActionMask = 2147483647; dstPath = ""; dstSubfolderSpec = 13; files = ( 5457AB9FB521F7F7EF0268A3 ); name = "Embed Foundation Extensions"; runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		8EEB51FF442739BD7FF70E0F = { isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "Nimbus/Resources/Info.plist"; sourceTree = SOURCE_ROOT; };
+		15CEB04183FD02712869015B = { isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Nimbus.entitlements; path = "Nimbus/Resources/Nimbus.entitlements"; sourceTree = SOURCE_ROOT; };
+		0273686E9EA3BF051C1FF99B = { isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "NimbusWidgets/Info.plist"; sourceTree = SOURCE_ROOT; };
+		762C85B0A1D9CF63D9531B9E = { isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = NimbusWidgets.entitlements; path = "NimbusWidgets/NimbusWidgets.entitlements"; sourceTree = SOURCE_ROOT; };
+		D0C35CD1D90D1EA160221D89 = { isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nimbus.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E758ED14E4102C008960CE0E = { isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NimbusWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		25180552F4880F94AE59578A = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppModel.swift; path = "Nimbus/App/AppModel.swift"; sourceTree = SOURCE_ROOT; };
+		9A9434A655C30A0981D53331 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LocationProvider.swift; path = "Nimbus/App/LocationProvider.swift"; sourceTree = SOURCE_ROOT; };
+		8EE0E6DE591CE17E0B04AC5F = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NimbusApp.swift; path = "Nimbus/App/NimbusApp.swift"; sourceTree = SOURCE_ROOT; };
+		570A4E7C32044C22AFBCD43D = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Theme.swift; path = "Nimbus/DesignSystem/Theme.swift"; sourceTree = SOURCE_ROOT; };
+		96ECE6FD36D61A17787EF9B9 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HeroView.swift; path = "Nimbus/Features/Hero/HeroView.swift"; sourceTree = SOURCE_ROOT; };
+		7E923C05B838B7CE41A9454F = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InspectorView.swift; path = "Nimbus/Features/Inspector/InspectorView.swift"; sourceTree = SOURCE_ROOT; };
+		4BBFD27BBB834A0C18D27399 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContentView.swift; path = "Nimbus/Features/Main/ContentView.swift"; sourceTree = SOURCE_ROOT; };
+		286E75C673D9553C8EF3D110 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MenuBarPanel.swift; path = "Nimbus/Features/MenuBar/MenuBarPanel.swift"; sourceTree = SOURCE_ROOT; };
+		C2764F59FB5668842F656E6B = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ModuleViews.swift; path = "Nimbus/Features/Modules/ModuleViews.swift"; sourceTree = SOURCE_ROOT; };
+		CAD49689388A42D786D6F285 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = "Nimbus/Features/Settings/SettingsView.swift"; sourceTree = SOURCE_ROOT; };
+		42D7843A898DADE36DE31685 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SidebarView.swift; path = "Nimbus/Features/Sidebar/SidebarView.swift"; sourceTree = SOURCE_ROOT; };
+		25ABBDD9F2E2903F4C9B4FC9 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WeatherSceneView.swift; path = "Nimbus/Scenes/WeatherSceneView.swift"; sourceTree = SOURCE_ROOT; };
+		03EC9400F4F39D666491A8D1 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = L10n.swift; path = "NimbusShared/L10n.swift"; sourceTree = SOURCE_ROOT; };
+		91405EE554DFC0C84755574C = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MotionPolicy.swift; path = "NimbusShared/MotionPolicy.swift"; sourceTree = SOURCE_ROOT; };
+		BF58850F063A15AF66015B1E = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OpenMeteoClient.swift; path = "NimbusShared/OpenMeteoClient.swift"; sourceTree = SOURCE_ROOT; };
+		CD36536532CB37B389A52A44 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OpenMeteoDTOs.swift; path = "NimbusShared/OpenMeteoDTOs.swift"; sourceTree = SOURCE_ROOT; };
+		B948DD2CC1BDC48C8A847B78 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Place.swift; path = "NimbusShared/Place.swift"; sourceTree = SOURCE_ROOT; };
+		6797CB6FBE98DBD075A9D2F9 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ScenePalette.swift; path = "NimbusShared/ScenePalette.swift"; sourceTree = SOURCE_ROOT; };
+		1EA3E9208DBB62A12B52A880 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SolarMath.swift; path = "NimbusShared/SolarMath.swift"; sourceTree = SOURCE_ROOT; };
+		068FD9A9CB68DCB63BB7EF81 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Units.swift; path = "NimbusShared/Units.swift"; sourceTree = SOURCE_ROOT; };
+		096C21244BBEB7C24D864745 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WeatherCondition.swift; path = "NimbusShared/WeatherCondition.swift"; sourceTree = SOURCE_ROOT; };
+		94DA2C8EEC7EFC7218453CEE = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WeatherSnapshot.swift; path = "NimbusShared/WeatherSnapshot.swift"; sourceTree = SOURCE_ROOT; };
+		BB354C05D22F77BAFDA89A6E = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WeatherStore.swift; path = "NimbusShared/WeatherStore.swift"; sourceTree = SOURCE_ROOT; };
+		92066194DE1DB0A590EF55CF = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NimbusWidgets.swift; path = "NimbusWidgets/NimbusWidgets.swift"; sourceTree = SOURCE_ROOT; };
+		17FC0F33D5D18907CD81170C = { isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "Nimbus/Resources/Assets.xcassets"; sourceTree = SOURCE_ROOT; };
+		22828CBD25F6D996E11665E2 = { isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		8F1542244232814E57913682 = { isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		026BAF1410C187CED35DEAF4 = { isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		CCF7BE3BD1CF742A8C1ACDCC = { isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		9BC2B0A3DAEF58EE9B723B18 = { isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Charts.framework; path = System/Library/Frameworks/Charts.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DC5E72DCDAFA3A0962FBEC53 = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = ( ); runOnlyForDeploymentPostprocessing = 0; };
+		AB031913AFDCADE89ED27B53 = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = ( ); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		230EC1417D3EE0EDD8405AF8 = { isa = PBXGroup; children = ( 25180552F4880F94AE59578A, 9A9434A655C30A0981D53331, 8EE0E6DE591CE17E0B04AC5F, 570A4E7C32044C22AFBCD43D, 96ECE6FD36D61A17787EF9B9, 7E923C05B838B7CE41A9454F, 4BBFD27BBB834A0C18D27399, 286E75C673D9553C8EF3D110, C2764F59FB5668842F656E6B, CAD49689388A42D786D6F285, 42D7843A898DADE36DE31685, 25ABBDD9F2E2903F4C9B4FC9 ); name = Nimbus; sourceTree = "<group>"; };
+		920556C28EE31A5D3C63F3BA = { isa = PBXGroup; children = ( 03EC9400F4F39D666491A8D1, 91405EE554DFC0C84755574C, BF58850F063A15AF66015B1E, CD36536532CB37B389A52A44, B948DD2CC1BDC48C8A847B78, 6797CB6FBE98DBD075A9D2F9, 1EA3E9208DBB62A12B52A880, 068FD9A9CB68DCB63BB7EF81, 096C21244BBEB7C24D864745, 94DA2C8EEC7EFC7218453CEE, BB354C05D22F77BAFDA89A6E ); name = NimbusShared; sourceTree = "<group>"; };
+		374EF5E5650C536AE5124E2C = { isa = PBXGroup; children = ( 92066194DE1DB0A590EF55CF ); name = NimbusWidgets; sourceTree = "<group>"; };
+		452364E2DC8F4302669DEFF3 = { isa = PBXGroup; children = ( 8EEB51FF442739BD7FF70E0F, 15CEB04183FD02712869015B, 17FC0F33D5D18907CD81170C, 0273686E9EA3BF051C1FF99B, 762C85B0A1D9CF63D9531B9E ); name = Resources; sourceTree = "<group>"; };
+		00C45FD35CB0F9C5F764F070 = { isa = PBXGroup; children = ( D0C35CD1D90D1EA160221D89, E758ED14E4102C008960CE0E ); name = Products; sourceTree = "<group>"; };
+		ADCF10F76EBF2A74473E9DC4 = { isa = PBXGroup; children = ( 230EC1417D3EE0EDD8405AF8, 920556C28EE31A5D3C63F3BA, 374EF5E5650C536AE5124E2C, 452364E2DC8F4302669DEFF3, 4EF5BA7BD40E319BE3847E3A, 00C45FD35CB0F9C5F764F070 ); sourceTree = "<group>"; };
+		4EF5BA7BD40E319BE3847E3A = { isa = PBXGroup; children = ( 22828CBD25F6D996E11665E2, 8F1542244232814E57913682, 026BAF1410C187CED35DEAF4, CCF7BE3BD1CF742A8C1ACDCC, 9BC2B0A3DAEF58EE9B723B18 ); name = Frameworks; sourceTree = "<group>"; };
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0710D8988B900A7C43103C98 = { isa = PBXNativeTarget; buildConfigurationList = E27AB920AC95CE1590D1D5A7; buildPhases = ( 6DD0B0E2B3F42D0AB423BFDF, AB031913AFDCADE89ED27B53, 578FF875BD67146FADA17670 ); buildRules = ( ); dependencies = ( ); name = NimbusWidgets; productName = NimbusWidgets; productReference = E758ED14E4102C008960CE0E; productType = "com.apple.product-type.app-extension"; };
+		29C7B681C8D62CBAC94D51C0 = { isa = PBXNativeTarget; buildConfigurationList = 8A4C137FDF67CE32F42E0D24; buildPhases = ( 6D2C1523C40DC9FD335FEEAE, DC5E72DCDAFA3A0962FBEC53, 948756E4B49084A627CA0B9A, F0AB04EE052351C80F3286E9 ); buildRules = ( ); dependencies = ( D4A9F4575995553F848634DB ); name = Nimbus; productName = Nimbus; productReference = D0C35CD1D90D1EA160221D89; productType = "com.apple.product-type.application"; };
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		98F54143AB4E86B28C3AFEE0 = { isa = PBXProject; attributes = { BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 2600; LastUpgradeCheck = 2600; }; buildConfigurationList = 6D6194B745F9FCF78E19905D; compatibilityVersion = "Xcode 15.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = ( en, Base ); mainGroup = ADCF10F76EBF2A74473E9DC4; productRefGroup = 00C45FD35CB0F9C5F764F070; projectDirPath = ""; projectRoot = ""; targets = ( 29C7B681C8D62CBAC94D51C0, 0710D8988B900A7C43103C98 ); };
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		948756E4B49084A627CA0B9A = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = ( 2AD381EB1D80A3EA4F55C405 ); runOnlyForDeploymentPostprocessing = 0; };
+		578FF875BD67146FADA17670 = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = ( ); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6D2C1523C40DC9FD335FEEAE = { isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = ( DF7A41CA43C135C90841D156, 284CD96EC97FEE814F36932C, AD7769A49B80B3D1F7BEFC87, C909CACCE46CC6BEDD986787, 40EF1DA4C10FE4A1FD2B2247, C6BA8FC9F06549066CC92B81, 21D546F2310B0575FAFD4F64, BAE4549C409C602DAE039DF1, DFB738A3532F8BFF5EA3EA66, 735DC5DC31AC3E9D93618BF4, 801BE92F35394AFAE8CA5D65, 6B871DB8F5C9664D1CEA77B3, 8E75F12120688311A126A433, 36846DA0146820DE73D1B497, 1586A32824B96EC9EB087BA1, E6134361EB4405EE221E6972, E8FDF7C14A52FF5B6FE7DEEA, 5DB48A7B7249F963652519F3, 09F5C65C3F6928DD68DD4BA6, 607F099697A93D23FF825ECA, AB6E3BD912917E6719FD466F, 21C0AE3F1D9841AECA62A09E, 5469F133B41C6449764D300F ); runOnlyForDeploymentPostprocessing = 0; };
+		6DD0B0E2B3F42D0AB423BFDF = { isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = ( 97471131DD8D88A58B8B4082, 965390AAD18D3E8B6B887A9C, BE08500016785C5F8B372EEF, 380A4EAD0D0B00448E104CCD, 4D1A47F423FF9795E95F5F3A, 68A1ED4FDB31CC2B3AA6DBBD, CFD8CE9EB55092ADF913BCBE, 9EF8BF1AD60E48BDB959430B, F008CD1028A53D7DB05C74B3, EA9585F51CD769768331166A, AC622BCA852E8C6E947B33EC, DE37A57B5F5D0408D35CA581 ); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D4A9F4575995553F848634DB = { isa = PBXTargetDependency; target = 0710D8988B900A7C43103C98; targetProxy = 0DD22CB6C2E8E29B0AF6C12D; };
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		D4172F6E5EBFE002CD5F7DE7 = { isa = XCBuildConfiguration; buildSettings = { CLANG_ENABLE_MODULES = YES; CLANG_ENABLE_OBJC_ARC = YES; COPY_PHASE_STRIP = NO; DEBUG_INFORMATION_FORMAT = dwarf; ENABLE_HARDENED_RUNTIME = YES; ENABLE_TESTABILITY = YES; GCC_DYNAMIC_NO_PIC = NO; GCC_OPTIMIZATION_LEVEL = 0; MACOSX_DEPLOYMENT_TARGET = 15.0; ONLY_ACTIVE_ARCH = YES; SDKROOT = macosx; SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG; SWIFT_OPTIMIZATION_LEVEL = "-Onone"; SWIFT_VERSION = 6.0; SWIFT_STRICT_CONCURRENCY = complete; CODE_SIGN_STYLE = Automatic; DEVELOPMENT_TEAM = 7JA9J6994N; ALWAYS_SEARCH_USER_PATHS = NO; CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES; }; name = Debug; };
+		C9CAF956A7C660E6865F2E2E = { isa = XCBuildConfiguration; buildSettings = { CLANG_ENABLE_MODULES = YES; CLANG_ENABLE_OBJC_ARC = YES; COPY_PHASE_STRIP = NO; DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym"; ENABLE_HARDENED_RUNTIME = YES; GCC_OPTIMIZATION_LEVEL = s; MACOSX_DEPLOYMENT_TARGET = 15.0; SDKROOT = macosx; SWIFT_COMPILATION_MODE = wholemodule; SWIFT_OPTIMIZATION_LEVEL = "-O"; SWIFT_VERSION = 6.0; SWIFT_STRICT_CONCURRENCY = complete; CODE_SIGN_STYLE = Automatic; DEVELOPMENT_TEAM = 7JA9J6994N; ALWAYS_SEARCH_USER_PATHS = NO; }; name = Release; };
+		440E5A6917A92EC34723EB9D = { isa = XCBuildConfiguration; buildSettings = { ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; CODE_SIGN_ENTITLEMENTS = Nimbus/Resources/Nimbus.entitlements; COMBINE_HIDPI_IMAGES = YES; CURRENT_PROJECT_VERSION = 1; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = Nimbus/Resources/Info.plist; LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks"; MARKETING_VERSION = 1.0; PRODUCT_BUNDLE_IDENTIFIER = app.nimbus.mac; PRODUCT_NAME = Nimbus; ENABLE_HARDENED_RUNTIME = YES; DEVELOPMENT_TEAM = 7JA9J6994N; CODE_SIGN_STYLE = Automatic; }; name = Debug; };
+		82FD79508EEAC699C8B01C6C = { isa = XCBuildConfiguration; buildSettings = { ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; CODE_SIGN_ENTITLEMENTS = Nimbus/Resources/Nimbus.entitlements; COMBINE_HIDPI_IMAGES = YES; CURRENT_PROJECT_VERSION = 1; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = Nimbus/Resources/Info.plist; LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks"; MARKETING_VERSION = 1.0; PRODUCT_BUNDLE_IDENTIFIER = app.nimbus.mac; PRODUCT_NAME = Nimbus; ENABLE_HARDENED_RUNTIME = YES; DEVELOPMENT_TEAM = 7JA9J6994N; CODE_SIGN_STYLE = Automatic; }; name = Release; };
+		56339D4B3FCFD263DCAE1626 = { isa = XCBuildConfiguration; buildSettings = { CODE_SIGN_ENTITLEMENTS = NimbusWidgets/NimbusWidgets.entitlements; COMBINE_HIDPI_IMAGES = YES; CURRENT_PROJECT_VERSION = 1; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = NimbusWidgets/Info.plist; LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks"; MARKETING_VERSION = 1.0; PRODUCT_BUNDLE_IDENTIFIER = app.nimbus.mac.widgets; PRODUCT_NAME = NimbusWidgets; SKIP_INSTALL = YES; ENABLE_HARDENED_RUNTIME = YES; DEVELOPMENT_TEAM = 7JA9J6994N; CODE_SIGN_STYLE = Automatic; }; name = Debug; };
+		43E46607DCF61F44A098A6B0 = { isa = XCBuildConfiguration; buildSettings = { CODE_SIGN_ENTITLEMENTS = NimbusWidgets/NimbusWidgets.entitlements; COMBINE_HIDPI_IMAGES = YES; CURRENT_PROJECT_VERSION = 1; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = NimbusWidgets/Info.plist; LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks"; MARKETING_VERSION = 1.0; PRODUCT_BUNDLE_IDENTIFIER = app.nimbus.mac.widgets; PRODUCT_NAME = NimbusWidgets; SKIP_INSTALL = YES; ENABLE_HARDENED_RUNTIME = YES; DEVELOPMENT_TEAM = 7JA9J6994N; CODE_SIGN_STYLE = Automatic; }; name = Release; };
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6D6194B745F9FCF78E19905D = { isa = XCConfigurationList; buildConfigurations = ( D4172F6E5EBFE002CD5F7DE7, C9CAF956A7C660E6865F2E2E ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Debug; };
+		8A4C137FDF67CE32F42E0D24 = { isa = XCConfigurationList; buildConfigurations = ( 440E5A6917A92EC34723EB9D, 82FD79508EEAC699C8B01C6C ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Debug; };
+		E27AB920AC95CE1590D1D5A7 = { isa = XCConfigurationList; buildConfigurations = ( 56339D4B3FCFD263DCAE1626, 43E46607DCF61F44A098A6B0 ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Debug; };
+/* End XCConfigurationList section */
+
+	};
+	rootObject = 98F54143AB4E86B28C3AFEE0;
+}
