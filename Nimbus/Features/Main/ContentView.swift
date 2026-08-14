@@ -16,8 +16,8 @@ struct ContentView: View {
             }
         }
         .environment(\.layoutDirection, model.language.isRTL ? .rightToLeft : .leftToRight)
-        .animation(NimbusTheme.panelSpring, value: model.inspectorVisible)
-        .animation(NimbusTheme.heroSpring, value: model.selectedPlaceID)
+        .animation(reduceMotion ? .easeOut(duration: 0.12) : NimbusTheme.panelSpring, value: model.inspectorVisible)
+        .animation(reduceMotion ? .easeOut(duration: 0.12) : NimbusTheme.heroSpring, value: model.selectedPlaceID)
         .background(Color.black.opacity(0.2))
         .toolbarBackground(.hidden, for: .windowToolbar)
         .toolbar {
@@ -31,7 +31,7 @@ struct ContentView: View {
                 .keyboardShortcut("r", modifiers: [.command])
 
                 Button {
-                    withAnimation(NimbusTheme.panelSpring) {
+                    withAnimation(reduceMotion ? .easeOut(duration: 0.12) : NimbusTheme.panelSpring) {
                         model.inspectorVisible.toggle()
                     }
                     Task { await model.persist(); await model.loadInspectorIfNeeded() }
@@ -102,7 +102,7 @@ struct ContentView: View {
                     language: model.language,
                     recipe: snapshot.sceneRecipe
                 ) {
-                    withAnimation(NimbusTheme.panelSpring) {
+                    withAnimation(reduceMotion ? .easeOut(duration: 0.12) : NimbusTheme.panelSpring) {
                         model.expandedModule = nil
                     }
                 }
@@ -150,7 +150,7 @@ struct ContentView: View {
                     recipe: recipe,
                     language: model.language
                 ) { day in
-                    withAnimation(NimbusTheme.panelSpring) {
+                    withAnimation(reduceMotion ? .easeOut(duration: 0.12) : NimbusTheme.panelSpring) {
                         if let focused = model.focusedDay, Calendar.current.isDate(focused, inSameDayAs: day) {
                             model.focusedDay = nil
                         } else {
@@ -164,7 +164,7 @@ struct ContentView: View {
                     language: model.language,
                     recipe: recipe
                 ) { module in
-                    withAnimation(NimbusTheme.panelSpring) {
+                    withAnimation(reduceMotion ? .easeOut(duration: 0.12) : NimbusTheme.panelSpring) {
                         model.expandedModule = module
                     }
                 }

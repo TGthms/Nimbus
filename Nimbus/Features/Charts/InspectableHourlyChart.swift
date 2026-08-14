@@ -8,17 +8,23 @@ struct InspectableHourlyChart: View {
     var timeZone: TimeZone
     var yDomain: ClosedRange<Double>?
     var accent: Color = Color(red: 0.45, green: 0.75, blue: 1)
-    var onIndexChange: ((Int) -> Void)?
+    var compact: Bool = false
+    var showsReadout: Bool = true
+    var hoverTime: Binding<Date?>?
 
-    @State private var hoverTime: Date?
+    @State private var localHover: Date?
+
+    private var hover: Binding<Date?> {
+        hoverTime ?? $localHover
+    }
 
     private var times: [Date] { hours.map(\.time) }
 
     private var nowIdx: Int { ChartInspect.nowIndex(times: times) }
 
     private var selectedIndex: Int {
-        if let hoverTime {
-            return ChartInspect.nearestIndex(times: times, target: hoverTime)
+        if let time = hover.wrappedValue {
+            return ChartInspect.nearestIndex(times: times, target: time)
         }
         return ChartInspect.resolvedIndex(hover: nil, now: nowIdx)
     }
@@ -28,43 +34,44 @@ struct InspectableHourlyChart: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(readout.valueLabel)
-                    .font(.system(size: 28, weight: .semibold, design: .rounded).monospacedDigit())
-                Spacer()
-                Text(readout.timeLabel)
-                    .font(.callout.weight(.medium))
-                    .opacity(0.72)
+        VStack(alignment: .leading, spacing: compact ? 4 : 8) {
+            if showsReadout {
+                HStack(alignment: .firstTextBaseline) {
+                    Text(readout.valueLabel)
+                        .font(.system(size: compact ? 20 : 28, weight: .semibold, design: .rounded).monospacedDigit())
+                    Spacer()
+                    Text(readout.timeLabel)
+                        .font(.callout.weight(.medium))
+                        .opacity(0.72)
+                }
+                .accessibilityElement(children: .combine)
             }
-            .accessibilityElement(children: .combine)
 
             chart
-                .frame(height: 168)
-        }
-        .onChange(of: selectedIndex) { _, index in
-            onIndexChange?(index)
+                .frame(height: compact ? 64 : 160)
         }
     }
 
     private var chart: some View {
         Chart(hours) { hour in
             let y = ChartInspect.displayY(hour, kind: kind, units: units)
-            AreaMark(
-                x: .value("Time", hour.time),
-                y: .value("Value", y)
-            )
-            .foregroundStyle(accent.opacity(0.18))
-            .interpolationMethod(.catmullRom)
+            if !compact {
+                AreaMark(
+                    x: .value("Time", hour.time),
+                    y: .value("Value", y)
+                )
+                .foregroundStyle(accent.opacity(0.18))
+                .interpolationMethod(.catmullRom)
+            }
             LineMark(
                 x: .value("Time", hour.time),
                 y: .value("Value", y)
             )
             .foregroundStyle(accent)
             .interpolationMethod(.catmullRom)
-            .lineStyle(StrokeStyle(lineWidth: 2))
+            .lineStyle(StrokeStyle(lineWidth: compact ? 1.5 : 2))
 
-            if hours.indices.contains(selectedIndex), hours[selectedIndex].id == hour.id {
+            if hours.indices.contains(selectedIndex), hours[selectedIndex].time == hour.time {
                 RuleMark(x: .value("Sel", hour.time))
                     .foregroundStyle(.white.opacity(0.55))
                     .lineStyle(StrokeStyle(lineWidth: 1))
@@ -73,23 +80,33 @@ struct InspectableHourlyChart: View {
                     y: .value("Value", y)
                 )
                 .foregroundStyle(.white)
-                .symbolSize(48)
+                .symbolSize(compact ? 28 : 48)
             }
         }
         .chartXAxis {
-            AxisMarks(values: .stride(by: .hour, count: 6)) { _ in
-                AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5)).foregroundStyle(.white.opacity(0.12))
-                AxisValueLabel(format: .dateTime.hour())
+            if compact {
+                AxisMarks(values: .stride(by: .hour, count: 12)) { _ in
+                    AxisGridLine(stroke: StrokeStyle(lineWidth: 0.4)).foregroundStyle(.white.opacity(0.08))
+                }
+            } else {
+                AxisMarks(values: .stride(by: .hour, count: 6)) { _ in
+                    AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5)).foregroundStyle(.white.opacity(0.12))
+                    AxisValueLabel(format: .dateTime.hour())
+                }
             }
         }
         .chartYAxis {
-            AxisMarks(position: .leading) { _ in
-                AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5)).foregroundStyle(.white.opacity(0.1))
-                AxisValueLabel()
+            if compact {
+                AxisMarks(position: .leading, values: .automatic(desiredCount: 2))
+            } else {
+                AxisMarks(position: .leading) { _ in
+                    AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5)).foregroundStyle(.white.opacity(0.1))
+                    AxisValueLabel()
+                }
             }
         }
         .chartYScale(domain: yDomain ?? automaticDomain)
-        .chartXSelection(value: $hoverTime)
+        .chartXSelection(value: hover)
         .chartOverlay { proxy in
             GeometryReader { geo in
                 Rectangle()
@@ -98,29 +115,30 @@ struct InspectableHourlyChart: View {
                     .onContinuousHover { phase in
                         switch phase {
                         case .active(let location):
-                            let x = location.x
-                            if let date: Date = proxy.value(atX: x) {
-                                hoverTime = date
-                            } else if geo.size.width > 0 {
-                                let i = ChartInspect.nearestIndex(times: times, x: x, width: geo.size.width)
-                                if hours.indices.contains(i) { hoverTime = hours[i].time }
-                            }
+                            setHover(atX: location.x, proxy: proxy, width: geo.size.width)
                         case .ended:
-                            hoverTime = nil
+                            hover.wrappedValue = nil
                         }
                     }
                     .gesture(
                         DragGesture(minimumDistance: 0)
                             .onChanged { value in
-                                if let date: Date = proxy.value(atX: value.location.x) {
-                                    hoverTime = date
-                                }
+                                setHover(atX: value.location.x, proxy: proxy, width: geo.size.width)
                             }
                             .onEnded { _ in
-                                hoverTime = nil
+                                hover.wrappedValue = nil
                             }
                     )
             }
+        }
+    }
+
+    private func setHover(atX x: CGFloat, proxy: ChartProxy, width: CGFloat) {
+        if let date: Date = proxy.value(atX: x) {
+            hover.wrappedValue = date
+        } else if width > 0 {
+            let i = ChartInspect.nearestIndex(times: times, x: x, width: width)
+            if hours.indices.contains(i) { hover.wrappedValue = hours[i].time }
         }
     }
 
@@ -128,12 +146,14 @@ struct InspectableHourlyChart: View {
         let values = hours.map { ChartInspect.displayY($0, kind: kind, units: units) }
         let lo = values.min() ?? 0
         let hi = values.max() ?? 1
-        if kind == .humidity { return 0...100 }
-        if kind == .uv { return 0...max(11, hi) }
-        if kind == .precipitation || kind == .wind || kind == .visibility {
+        switch kind {
+        case .humidity: return 0...100
+        case .uv: return 0...max(11, hi)
+        case .precipitation, .wind, .visibility, .cape, .shortwave:
             return 0...max(hi * 1.15, 1)
+        default:
+            let pad = max((hi - lo) * 0.14, 1)
+            return (lo - pad)...(hi + pad)
         }
-        let pad = max((hi - lo) * 0.14, 1)
-        return (lo - pad)...(hi + pad)
     }
 }

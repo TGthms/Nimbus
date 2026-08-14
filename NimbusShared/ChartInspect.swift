@@ -9,6 +9,8 @@ public enum ChartSeriesKind: String, Sendable, CaseIterable {
     case uv
     case pressure
     case visibility
+    case cape
+    case shortwave
 }
 
 public struct ChartReadout: Equatable, Sendable {
@@ -78,6 +80,12 @@ public enum ChartInspect {
             return WeatherFormatting.pressure(hour.pressureMSL)
         case .visibility:
             return WeatherFormatting.visibility(hour.visibility, unit: units.distance)
+        case .cape:
+            guard let cape = hour.cape else { return "—" }
+            return "\(Int(cape.rounded())) J/kg"
+        case .shortwave:
+            guard let ghi = hour.shortwaveRadiation else { return "—" }
+            return "\(Int(ghi.rounded())) W/m²"
         }
     }
 
@@ -113,6 +121,10 @@ public enum ChartInspect {
         case .visibility:
             let meters = hour.visibility ?? 0
             return units.distance == .mile ? meters / 1609.344 : meters / 1000
+        case .cape:
+            return hour.cape ?? 0
+        case .shortwave:
+            return hour.shortwaveRadiation ?? 0
         }
     }
 }

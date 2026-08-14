@@ -57,6 +57,19 @@ final class ChartInspectTests: XCTestCase {
         XCTAssertNotEqual(reset.index, hovered.index)
     }
 
+    func testCapeAndShortwaveInspectTheRealSeries() {
+        let hours = Self.sampleHours()
+        let metric = UnitPreferences.fromSignals(
+            LocaleUnitSignals(regionCode: "GB", measurement: .metric, temperature: .celsius)
+        )
+        XCTAssertEqual(ChartInspect.formatValue(hours[0], kind: .cape, units: metric), "1800 J/kg")
+        XCTAssertEqual(ChartInspect.formatValue(hours[0], kind: .shortwave, units: metric), "420 W/m²")
+        XCTAssertEqual(ChartInspect.displayY(hours[0], kind: .cape, units: metric), 1800, accuracy: 0.01)
+        XCTAssertEqual(ChartInspect.displayY(hours[0], kind: .shortwave, units: metric), 420, accuracy: 0.01)
+        XCTAssertNotEqual(ChartInspect.formatValue(hours[0], kind: .cape, units: metric), ChartInspect.formatValue(hours[0], kind: .temperature, units: metric))
+        XCTAssertNotEqual(ChartInspect.formatValue(hours[0], kind: .shortwave, units: metric), ChartInspect.formatValue(hours[0], kind: .uv, units: metric))
+    }
+
     private static func hourlyTimes(count: Int) -> [Date] {
         (0..<count).map { Date(timeIntervalSince1970: Double($0) * 3600) }
     }
@@ -94,12 +107,12 @@ final class ChartInspectTests: XCTestCase {
             windGusts: wind,
             uvIndex: 3,
             isDay: true,
-            cape: nil,
+            cape: 1800,
             liftedIndex: nil,
             convectiveInhibition: nil,
             freezingLevelHeight: nil,
             boundaryLayerHeight: nil,
-            shortwaveRadiation: nil,
+            shortwaveRadiation: 420,
             directRadiation: nil,
             diffuseRadiation: nil,
             sunshineDuration: nil,

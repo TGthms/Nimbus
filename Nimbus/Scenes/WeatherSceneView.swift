@@ -12,7 +12,7 @@ struct WeatherSceneView: View {
     }
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: animate ? 1.0 / 30.0 : 1.0, paused: !animate)) { timeline in
+        TimelineView(.animation(minimumInterval: animate ? 1.0 / 12.0 : 1.0, paused: !animate)) { timeline in
             Canvas { context, size in
                 SceneCompositor.draw(
                     context: &context,
@@ -202,7 +202,7 @@ enum SceneCompositor {
     }
 
     private static func drawRain(context: inout GraphicsContext, size: CGSize, recipe: SceneRecipe, time: TimeInterval) {
-        let count = Int(50 + recipe.precipRate * 90)
+        let count = Int(18 + min(recipe.precipRate, 2) * 22)
         let shear = CGFloat(sin(recipe.windDirection * .pi / 180) * min(recipe.windSpeed, 40) * 0.6)
         var rng = SplitGenerator(seed: 3)
         for i in 0..<count {
@@ -219,7 +219,7 @@ enum SceneCompositor {
     }
 
     private static func drawSnow(context: inout GraphicsContext, size: CGSize, recipe: SceneRecipe, time: TimeInterval) {
-        let count = Int(40 + recipe.precipRate * 70)
+        let count = Int(16 + min(recipe.precipRate, 2) * 18)
         var rng = SplitGenerator(seed: 9)
         for i in 0..<count {
             let speed = 40.0 + rng.next() * 50

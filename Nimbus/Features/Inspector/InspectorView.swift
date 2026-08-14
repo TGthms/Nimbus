@@ -3,6 +3,7 @@ import Charts
 
 struct InspectorView: View {
     @ObservedObject var model: AppModel
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var modelHover: Date?
 
     var body: some View {
@@ -12,7 +13,7 @@ struct InspectorView: View {
                     .font(.headline)
                 Spacer()
                 Button {
-                    withAnimation(NimbusTheme.panelSpring) { model.inspectorVisible = false }
+                    withAnimation(reduceMotion ? .easeOut(duration: 0.12) : NimbusTheme.panelSpring) { model.inspectorVisible = false }
                     Task { await model.persist() }
                 } label: {
                     Image(systemName: "xmark.circle.fill")
@@ -150,7 +151,7 @@ struct InspectorView: View {
                 metric("Freezing", snap.current.freezingLevelHeight.map { "\(Int($0.rounded())) m" } ?? "—", note: nil)
                 InspectableHourlyChart(
                     hours: snap.hours(limit: 24),
-                    kind: .temperature,
+                    kind: .cape,
                     units: model.units,
                     timeZone: snap.timezone
                 )
@@ -168,7 +169,7 @@ struct InspectorView: View {
                 }
                 InspectableHourlyChart(
                     hours: snap.hours(limit: 24),
-                    kind: .uv,
+                    kind: .shortwave,
                     units: model.units,
                     timeZone: snap.timezone,
                     accent: .orange

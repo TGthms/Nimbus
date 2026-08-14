@@ -92,7 +92,10 @@ struct HourlyStripView: View {
                 kind: .temperature,
                 units: units,
                 timeZone: snapshot.timezone,
-                accent: Color.white.opacity(0.92)
+                accent: Color.white.opacity(0.92),
+                compact: true,
+                showsReadout: false,
+                hoverTime: $hoverTime
             )
             .padding(.horizontal, 12)
 
