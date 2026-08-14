@@ -38,8 +38,12 @@ final class FormattingAndPlacesTests: XCTestCase {
         XCTAssertEqual(value("precipitation_unit"), "mm")
 
         XCTAssertEqual(WeatherFormatting.temperature(0, unit: .fahrenheit), "32°")
-        XCTAssertEqual(WeatherFormatting.wind(16.09344, unit: .milesPerHour), "10 mph")
+        // Inspector sounding / model-high use these same calls on SI series.
+        XCTAssertEqual(WeatherFormatting.temperature(23.3, unit: imperial.temperature), "74°")
+        XCTAssertEqual(WeatherFormatting.wind(16.09344, unit: imperial.wind), "10 mph")
         XCTAssertEqual(WeatherFormatting.precipitation(25.4, unit: .inch), "1.00 in")
+        XCTAssertNotEqual(WeatherFormatting.temperature(23.3, unit: imperial.temperature), "23°")
+        XCTAssertNotEqual(WeatherFormatting.wind(16.09344, unit: imperial.wind), "16 mph")
 
         let ensemble = query.ensembleURL(model: "gfs_seamless")
         let eItems = URLComponents(url: ensemble, resolvingAgainstBaseURL: false)!.queryItems!

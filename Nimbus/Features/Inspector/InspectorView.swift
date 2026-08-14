@@ -93,7 +93,7 @@ struct InspectorView: View {
                             if let temp = series.temperature[safe: index] ?? nil {
                                 LineMark(
                                     x: .value("Time", time),
-                                    y: .value("Temp", temp)
+                                    y: .value("Temp", model.units.temperature.display(temp))
                                 )
                                 .foregroundStyle(by: .value("Model", series.title))
                             }
@@ -110,7 +110,7 @@ struct InspectorView: View {
                     Text(series.title)
                     Spacer()
                     if let maxT = nextTemps.max() {
-                        Text("\(Int(maxT.rounded()))°")
+                        Text(WeatherFormatting.temperature(maxT, unit: model.units.temperature))
                             .font(.caption.monospacedDigit())
                             .foregroundStyle(.secondary)
                     }
@@ -162,12 +162,14 @@ struct InspectorView: View {
                 Chart {
                     ForEach(Array(ensemble.times.enumerated()), id: \.offset) { index, time in
                         if let mean = ensemble.temperatureMean[safe: index] ?? nil {
-                            LineMark(x: .value("Time", time), y: .value("Mean", mean))
+                            let shown = model.units.temperature.display(mean)
+                            LineMark(x: .value("Time", time), y: .value("Mean", shown))
                             if let spread = ensemble.temperatureSpread[safe: index] ?? nil {
+                                let delta = model.units.temperature.display(mean + spread) - shown
                                 AreaMark(
                                     x: .value("Time", time),
-                                    yStart: .value("Low", mean - spread),
-                                    yEnd: .value("High", mean + spread)
+                                    yStart: .value("Low", shown - delta),
+                                    yEnd: .value("High", shown + delta)
                                 )
                                 .opacity(0.16)
                             }
@@ -200,10 +202,10 @@ struct InspectorView: View {
     private func profileRow(_ level: String, _ t: Double?, _ rh: Double?, _ wind: Double?) -> some View {
         HStack {
             Text(level).frame(width: 78, alignment: .leading)
-            Text(t.map { String(format: "%.1f°", $0) } ?? "—").frame(width: 52)
+            Text(WeatherFormatting.temperature(t, unit: model.units.temperature)).frame(width: 52)
             Text(rh.map { "\(Int($0.rounded()))%" } ?? "—").frame(width: 40)
             if let wind {
-                Text("\(Int(wind.rounded())) \(model.units.wind.title)")
+                Text(WeatherFormatting.wind(wind, unit: model.units.wind))
             }
             Spacer()
         }

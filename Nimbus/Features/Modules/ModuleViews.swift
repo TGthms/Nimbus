@@ -264,15 +264,15 @@ struct ModuleDetailOverlay: View {
             Chart(hours) { hour in
                 BarMark(
                     x: .value("Time", hour.time),
-                    y: .value("Precip", hour.precipitation ?? 0)
+                    y: .value("Precip", units.precipitation.displayFromMM(hour.precipitation ?? 0))
                 )
                 .foregroundStyle(Color(red: 0.45, green: 0.75, blue: 1))
             }
             .chartXAxis { AxisMarks(values: .stride(by: .hour, count: 6)) }
         case .wind:
             Chart(hours) { hour in
-                LineMark(x: .value("Time", hour.time), y: .value("Wind", hour.windSpeed ?? 0))
-                AreaMark(x: .value("Time", hour.time), y: .value("Wind", hour.windSpeed ?? 0))
+                LineMark(x: .value("Time", hour.time), y: .value("Wind", units.wind.displayFromKmh(hour.windSpeed ?? 0)))
+                AreaMark(x: .value("Time", hour.time), y: .value("Wind", units.wind.displayFromKmh(hour.windSpeed ?? 0)))
                     .foregroundStyle(Color.white.opacity(0.12))
             }
             .chartXAxis { AxisMarks(values: .stride(by: .hour, count: 6)) }
@@ -306,8 +306,8 @@ struct ModuleDetailOverlay: View {
             }
         case .feelsLike:
             Chart(hours) { hour in
-                LineMark(x: .value("Time", hour.time), y: .value("Apparent", hour.apparentTemperature ?? 0))
-                LineMark(x: .value("Time", hour.time), y: .value("Air", hour.temperature ?? 0))
+                LineMark(x: .value("Time", hour.time), y: .value("Apparent", units.temperature.display(hour.apparentTemperature ?? 0)))
+                LineMark(x: .value("Time", hour.time), y: .value("Air", units.temperature.display(hour.temperature ?? 0)))
                     .foregroundStyle(.secondary)
             }
         case .sunMoon:
