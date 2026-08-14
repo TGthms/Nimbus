@@ -186,15 +186,16 @@ public struct UnitPreferences: Codable, Hashable, Sendable {
 }
 
 public enum WeatherFormatting {
+    /// `value` is always SI from the API (°C). Convert here for display.
     public static func temperature(_ value: Double?, unit: TemperatureUnit, showUnit: Bool = false) -> String {
         guard let value else { return "—" }
-        let rounded = Int(value.rounded())
+        let rounded = Int(unit.display(value).rounded())
         return showUnit ? "\(rounded)\(unit == .celsius ? "°C" : "°F")" : "\(rounded)°"
     }
 
     public static func signedTemperature(_ value: Double?, unit: TemperatureUnit) -> String {
         guard let value else { return "—" }
-        let rounded = Int(value.rounded())
+        let rounded = Int(unit.display(value).rounded())
         return "\(rounded)°"
     }
 

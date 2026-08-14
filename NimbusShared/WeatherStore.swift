@@ -104,6 +104,19 @@ public actor WeatherStore {
         decoder.dateDecodingStrategy = .iso8601
         self.decoder = decoder
         try? fileManager.createDirectory(at: root.appendingPathComponent("snapshots"), withIntermediateDirectories: true)
+        Self.migrateCacheIfNeeded(root: root, fileManager: fileManager)
+    }
+
+    /// Snapshots are SI (°C, km/h, mm). Generation 1 stored API-converted imperial.
+    private static let cacheGeneration = "2"
+
+    private static func migrateCacheIfNeeded(root: URL, fileManager: FileManager) {
+        let marker = root.appendingPathComponent("cache-generation.txt")
+        let existing = (try? String(contentsOf: marker, encoding: .utf8))?.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard existing != cacheGeneration else { return }
+        try? fileManager.removeItem(at: root.appendingPathComponent("snapshots"))
+        try? fileManager.createDirectory(at: root.appendingPathComponent("snapshots"), withIntermediateDirectories: true)
+        try? cacheGeneration.write(to: marker, atomically: true, encoding: .utf8)
     }
 
     private var placesURL: URL { root.appendingPathComponent("places.json") }

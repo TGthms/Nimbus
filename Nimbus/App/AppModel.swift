@@ -256,12 +256,7 @@ final class AppModel: ObservableObject {
 
     func applyUnits(_ units: UnitPreferences) {
         settings.units = units
-        Task {
-            await persist()
-            snapshots = [:]
-            await refreshSelected(force: true)
-            await refreshSidebarSummaries()
-        }
+        Task { await persist() }
     }
 
     func loadInspectorIfNeeded() async {

@@ -313,8 +313,8 @@ struct ModuleDetailOverlay: View {
         case .sunMoon:
             VStack(alignment: .leading, spacing: 8) {
                 if let today = snapshot.today {
-                    labeled(L10n.string("today", language: language), today.sunrise)
-                    labeled(L10n.string("sun_moon", language: language), today.sunset)
+                    labeled(L10n.string("sunrise", language: language), today.sunrise)
+                    labeled(L10n.string("sunset", language: language), today.sunset)
                     if let daylight = today.daylightDuration {
                         Text(formattedDuration(daylight))
                     }

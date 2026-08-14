@@ -174,6 +174,8 @@ extension L10n {
             "visibility": row("Visibility", "Visibilidad", "Visibilité", "Sichtweite", "Visibilità", "Visibilidade", "Zicht", "الرؤية", "視程", "가시거리", "能见度", "能見度"),
             "pressure": row("Pressure", "Presión", "Pression", "Luftdruck", "Pressione", "Pressão", "Luchtdruk", "الضغط", "気圧", "기압", "气压", "氣壓"),
             "sun_moon": row("Sun & Moon", "Sol y luna", "Soleil et lune", "Sonne & Mond", "Sole e luna", "Sol e lua", "Zon en maan", "الشمس والقمر", "太陽と月", "해와 달", "日月", "日月"),
+            "sunrise": row("Sunrise", "Amanecer", "Lever du soleil", "Sonnenaufgang", "Alba", "Nascer do sol", "Zonsopkomst", "الشروق", "日の出", "일출", "日出", "日出"),
+            "sunset": row("Sunset", "Atardecer", "Coucher du soleil", "Sonnenuntergang", "Tramonto", "Pôr do sol", "Zonsondergang", "الغروب", "日の入り", "일몰", "日落", "日落"),
             "air_quality": row("Air Quality", "Calidad del aire", "Qualité de l’air", "Luftqualität", "Qualità dell’aria", "Qualidade do ar", "Luchtkwaliteit", "جودة الهواء", "大気質", "대기질", "空气质量", "空氣品質"),
             "search_cities": row("Search cities", "Buscar ciudades", "Rechercher des villes", "Städte suchen", "Cerca città", "Buscar cidades", "Zoek steden", "البحث عن مدن", "都市を検索", "도시 검색", "搜索城市", "搜尋城市"),
             "my_location": row("My Location", "Mi ubicación", "Ma position", "Eigener Standort", "La mia posizione", "Minha localização", "Mijn locatie", "موقعي", "現在地", "내 위치", "我的位置", "我的位置"),

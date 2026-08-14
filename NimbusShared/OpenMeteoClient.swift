@@ -101,9 +101,11 @@ public struct ForecastQuery: Equatable, Sendable {
             URLQueryItem(name: "longitude", value: String(longitude)),
             URLQueryItem(name: "timezone", value: timezone),
             URLQueryItem(name: "forecast_days", value: String(forecastDays)),
-            URLQueryItem(name: "temperature_unit", value: units.temperature.apiValue),
-            URLQueryItem(name: "wind_speed_unit", value: units.wind.apiValue),
-            URLQueryItem(name: "precipitation_unit", value: units.precipitation.apiValue),
+            // Always SI. Display conversion happens in WeatherFormatting so
+            // imperial prefs cannot be converted twice (API + formatter).
+            URLQueryItem(name: "temperature_unit", value: "celsius"),
+            URLQueryItem(name: "wind_speed_unit", value: "kmh"),
+            URLQueryItem(name: "precipitation_unit", value: "mm"),
             URLQueryItem(name: "current", value: Self.currentVariables.joined(separator: ",")),
             URLQueryItem(name: "daily", value: Self.dailyVariables.joined(separator: ","))
         ]
@@ -164,8 +166,8 @@ public struct ForecastQuery: Equatable, Sendable {
             URLQueryItem(name: "timezone", value: timezone),
             URLQueryItem(name: "forecast_days", value: "7"),
             URLQueryItem(name: "models", value: model),
-            URLQueryItem(name: "temperature_unit", value: units.temperature.apiValue),
-            URLQueryItem(name: "precipitation_unit", value: units.precipitation.apiValue),
+            URLQueryItem(name: "temperature_unit", value: "celsius"),
+            URLQueryItem(name: "precipitation_unit", value: "mm"),
             URLQueryItem(
                 name: "hourly",
                 value: "temperature_2m,temperature_2m_spread,precipitation,precipitation_spread"

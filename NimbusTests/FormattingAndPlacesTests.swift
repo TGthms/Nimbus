@@ -24,6 +24,29 @@ final class FormattingAndPlacesTests: XCTestCase {
         XCTAssertEqual(WeatherFormatting.pressure(1013.4), "1013 hPa")
     }
 
+    /// Would fail on the old pipeline: ForecastQuery asked Open-Meteo for mph/inch
+    /// while WeatherFormatting.wind/precipitation converted again from km/h and mm
+    /// (10 mph → 6 mph). Temperature was never converted at display.
+    func testDisplayPipelineIsSIThenConvertOnce() {
+        let imperial = UnitPreferences.fromLocale(Locale(identifier: "en_US"))
+        let query = ForecastQuery(latitude: 40.7128, longitude: -74.0060, units: imperial)
+        let items = URLComponents(url: query.url(), resolvingAgainstBaseURL: false)!.queryItems!
+        func value(_ name: String) -> String? { items.first(where: { $0.name == name })?.value }
+
+        XCTAssertEqual(value("temperature_unit"), "celsius")
+        XCTAssertEqual(value("wind_speed_unit"), "kmh")
+        XCTAssertEqual(value("precipitation_unit"), "mm")
+
+        XCTAssertEqual(WeatherFormatting.temperature(0, unit: .fahrenheit), "32°")
+        XCTAssertEqual(WeatherFormatting.wind(16.09344, unit: .milesPerHour), "10 mph")
+        XCTAssertEqual(WeatherFormatting.precipitation(25.4, unit: .inch), "1.00 in")
+
+        let ensemble = query.ensembleURL(model: "gfs_seamless")
+        let eItems = URLComponents(url: ensemble, resolvingAgainstBaseURL: false)!.queryItems!
+        XCTAssertEqual(eItems.first(where: { $0.name == "temperature_unit" })?.value, "celsius")
+        XCTAssertEqual(eItems.first(where: { $0.name == "precipitation_unit" })?.value, "mm")
+    }
+
     func testRelativeUpdated() {
         let now = Date()
         XCTAssertEqual(WeatherFormatting.relativeUpdated(from: now.addingTimeInterval(-10), now: now), "Updated just now")

@@ -77,6 +77,14 @@ final class LocaleMotionL10nTests: XCTestCase {
         XCTAssertEqual(L10n.string("done", language: .japanese), "完了")
         XCTAssertEqual(L10n.string("sounding", language: .english), "Sounding")
         XCTAssertEqual(L10n.string("settings", language: .chineseSimplified), "设置")
+        XCTAssertEqual(L10n.string("sunrise", language: .english), "Sunrise")
+        XCTAssertEqual(L10n.string("sunset", language: .english), "Sunset")
+        XCTAssertNotEqual(L10n.string("sunrise", language: .english), L10n.string("today", language: .english))
+        XCTAssertNotEqual(L10n.string("sunset", language: .english), L10n.string("sun_moon", language: .english))
+        for language in AppLanguage.displayOrder {
+            XCTAssertNotEqual(L10n.string("sunrise", language: language), "sunrise", "\(language)")
+            XCTAssertNotEqual(L10n.string("sunset", language: language), "sunset", "\(language)")
+        }
     }
 
     func testDisplayOrderIsConventionalNotRequestOrder() {
