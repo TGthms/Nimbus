@@ -6,18 +6,30 @@ struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var settingsPresented = false
 
+    private var motion: Animation {
+        NimbusTheme.uiAnimation(systemReduceMotion: reduceMotion, preference: model.settings.motion)
+    }
+
+    private var placeMotion: Animation {
+        NimbusTheme.placeAnimation(systemReduceMotion: reduceMotion, preference: model.settings.motion)
+    }
+
+    private var allowsMotion: Bool {
+        MotionPolicy.allowsDynamicMotion(systemReduceMotion: reduceMotion, preference: model.settings.motion)
+    }
+
     var body: some View {
         HStack(spacing: 0) {
             SidebarView(model: model)
             mainStage
             if model.inspectorVisible {
                 InspectorView(model: model)
-                    .transition(.move(edge: .trailing).combined(with: .opacity))
+                    .transition(allowsMotion ? .move(edge: .trailing).combined(with: .opacity) : .opacity)
             }
         }
         .environment(\.layoutDirection, model.language.isRTL ? .rightToLeft : .leftToRight)
-        .animation(reduceMotion ? .easeOut(duration: 0.12) : NimbusTheme.panelSpring, value: model.inspectorVisible)
-        .animation(reduceMotion ? .easeOut(duration: 0.12) : NimbusTheme.heroSpring, value: model.selectedPlaceID)
+        .animation(motion, value: model.inspectorVisible)
+        .animation(placeMotion, value: model.selectedPlaceID)
         .background(Color.black.opacity(0.2))
         .toolbarBackground(.hidden, for: .windowToolbar)
         .toolbar {
@@ -31,7 +43,7 @@ struct ContentView: View {
                 .keyboardShortcut("r", modifiers: [.command])
 
                 Button {
-                    withAnimation(reduceMotion ? .easeOut(duration: 0.12) : NimbusTheme.panelSpring) {
+                    withAnimation(motion) {
                         model.inspectorVisible.toggle()
                     }
                     Task { await model.persist(); await model.loadInspectorIfNeeded() }
@@ -79,7 +91,7 @@ struct ContentView: View {
             scene
             if let snapshot = model.selectedSnapshot {
                 forecastStack(snapshot)
-                    .transition(.opacity.combined(with: .offset(y: reduceMotion ? 0 : 10)))
+                    .transition(.opacity.combined(with: .offset(y: allowsMotion ? 10 : 0)))
             } else {
                 emptyState
             }
@@ -102,15 +114,15 @@ struct ContentView: View {
                     language: model.language,
                     recipe: snapshot.sceneRecipe
                 ) {
-                    withAnimation(reduceMotion ? .easeOut(duration: 0.12) : NimbusTheme.panelSpring) {
+                    withAnimation(motion) {
                         model.expandedModule = nil
                     }
                 }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .animation(reduceMotion ? .easeOut(duration: 0.12) : NimbusTheme.panelSpring, value: model.expandedModule)
-        .animation(reduceMotion ? .easeOut(duration: 0.12) : NimbusTheme.panelSpring, value: model.inspectorVisible)
+        .animation(motion, value: model.expandedModule)
+        .animation(motion, value: model.inspectorVisible)
     }
 
     @ViewBuilder
@@ -150,7 +162,7 @@ struct ContentView: View {
                     recipe: recipe,
                     language: model.language
                 ) { day in
-                    withAnimation(reduceMotion ? .easeOut(duration: 0.12) : NimbusTheme.panelSpring) {
+                    withAnimation(motion) {
                         if let focused = model.focusedDay, Calendar.current.isDate(focused, inSameDayAs: day) {
                             model.focusedDay = nil
                         } else {
@@ -164,7 +176,7 @@ struct ContentView: View {
                     language: model.language,
                     recipe: recipe
                 ) { module in
-                    withAnimation(reduceMotion ? .easeOut(duration: 0.12) : NimbusTheme.panelSpring) {
+                    withAnimation(motion) {
                         model.expandedModule = module
                     }
                 }

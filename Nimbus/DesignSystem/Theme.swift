@@ -8,6 +8,18 @@ enum NimbusTheme {
     static let panelSpring = Animation.spring(response: 0.34, dampingFraction: 1.0)
     static let sceneSpring = Animation.spring(response: 0.8, dampingFraction: 1.0)
 
+    static func uiAnimation(systemReduceMotion: Bool, preference: MotionPreference) -> Animation {
+        MotionPolicy.allowsDynamicMotion(systemReduceMotion: systemReduceMotion, preference: preference)
+            ? panelSpring
+            : .easeOut(duration: 0.12)
+    }
+
+    static func placeAnimation(systemReduceMotion: Bool, preference: MotionPreference) -> Animation {
+        MotionPolicy.allowsDynamicMotion(systemReduceMotion: systemReduceMotion, preference: preference)
+            ? heroSpring
+            : .easeOut(duration: 0.12)
+    }
+
     static func skyColors(recipe: SceneRecipe) -> [Color] {
         ScenePalette.colors(recipe: recipe)
     }

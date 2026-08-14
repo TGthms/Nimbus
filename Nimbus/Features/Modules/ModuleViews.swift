@@ -252,7 +252,6 @@ struct ModuleDetailOverlay: View {
             .shadow(color: .black.opacity(0.28), radius: 28, y: 12)
         }
         .transition(.opacity.combined(with: .scale(scale: 0.96, anchor: .center)))
-        .animation(NimbusTheme.panelSpring, value: module)
     }
 
     @ViewBuilder

@@ -13,7 +13,7 @@ struct InspectorView: View {
                     .font(.headline)
                 Spacer()
                 Button {
-                    withAnimation(reduceMotion ? .easeOut(duration: 0.12) : NimbusTheme.panelSpring) { model.inspectorVisible = false }
+                    withAnimation(NimbusTheme.uiAnimation(systemReduceMotion: reduceMotion, preference: model.settings.motion)) { model.inspectorVisible = false }
                     Task { await model.persist() }
                 } label: {
                     Image(systemName: "xmark.circle.fill")
