@@ -21,6 +21,7 @@ final class AppModel: ObservableObject {
     @Published var modelSeries: [ModelComparisonSeries] = []
     @Published var ensemble: EnsembleSeries?
     @Published var isLoadingInspector = false
+    @Published var searchFocusTick = 0
 
     let location = LocationProvider()
     let client = OpenMeteoClient()
@@ -231,8 +232,14 @@ final class AppModel: ObservableObject {
         }
     }
 
+    func focusSearch() {
+        searchFocusTick += 1
+    }
+
     func refreshSidebarSummaries() async {
+        var budget = 4
         for place in places where place.id != selectedPlaceID {
+            guard budget > 0 else { break }
             if let existing = snapshots[place.id], !existing.isStale(ttl: 45 * 60) {
                 continue
             }
@@ -241,6 +248,7 @@ final class AppModel: ObservableObject {
                 guard location.coordinate != nil else { continue }
                 resolved = location.currentPlace(existing: place)
             }
+            budget -= 1
             do {
                 let snap = try await client.forecastOnly(for: resolved, units: units)
                 snapshots[place.id] = snap

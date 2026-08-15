@@ -8,4 +8,4 @@ Abra `Nimbus.xcodeproj` ou o `.app` de uma Release. macOS 15+.
 
 A barra lateral começa com **Minha localização** e cidades populares. Pesquise qualquer cidade e toque em **Adicionar**. Idioma e unidades seguem o sistema até você alterar em Ajustes. **Concluído** fecha a folha. Um clique no cartão abre um detalhe sobreposto.
 
-Dados do Open-Meteo, sem chave de API.
+Dados do Open-Meteo, sem chave de API. **Minha localização** usa só posição aproximada (~1 km), não GPS preciso.

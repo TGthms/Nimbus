@@ -8,4 +8,4 @@ Native macOS-Wetter-App: filmische Szenen, detaillierte [Open-Meteo](https://ope
 
 Die Seitenleiste startet mit **Eigener Standort** und beliebten Städten. Weitere Städte suchen und **Hinzufügen**. Sprache und Einheiten folgen dem System, bis Sie sie in den Einstellungen ändern. **Fertig** schließt das Blatt. Ein Klick auf eine Kachel öffnet ein Overlay.
 
-Daten von Open-Meteo, kein API-Schlüssel.
+Daten von Open-Meteo, kein API-Schlüssel. **Eigener Standort** nutzt nur eine ungefähre Position (~1 km), kein genaues GPS.

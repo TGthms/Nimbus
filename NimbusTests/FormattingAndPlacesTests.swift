@@ -2,6 +2,20 @@ import XCTest
 @testable import NimbusShared
 
 final class FormattingAndPlacesTests: XCTestCase {
+    func testApproximateLocationSnapsToCityGridNotPreciseFix() {
+        let rawLat = 37.774929
+        let rawLon = -122.419418
+        let snapped = LocationPrivacy.approximate(latitude: rawLat, longitude: rawLon)
+        XCTAssertEqual(snapped.latitude, 37.77, accuracy: 0.0000001)
+        XCTAssertEqual(snapped.longitude, -122.42, accuracy: 0.0000001)
+        XCTAssertNotEqual(snapped.latitude, rawLat)
+        XCTAssertNotEqual(snapped.longitude, rawLon)
+        let again = LocationPrivacy.approximate(latitude: snapped.latitude, longitude: snapped.longitude)
+        XCTAssertEqual(again.latitude, snapped.latitude, accuracy: 0.0000001)
+        XCTAssertEqual(again.longitude, snapped.longitude, accuracy: 0.0000001)
+        XCTAssertEqual(LocationPrivacy.gridDegrees, 0.01, accuracy: 0.0000001)
+    }
+
     func testTemperatureConversion() {
         XCTAssertEqual(TemperatureUnit.fahrenheit.display(0), 32, accuracy: 0.001)
         XCTAssertEqual(TemperatureUnit.fahrenheit.display(100), 212, accuracy: 0.001)

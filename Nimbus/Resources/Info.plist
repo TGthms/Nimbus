@@ -24,10 +24,12 @@
 	<string>public.app-category.weather</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>15.0</string>
+	<key>NSLocationDefaultAccuracyReduced</key>
+	<true/>
 	<key>NSLocationUsageDescription</key>
-	<string>Nimbus uses your location only to fetch the local weather forecast from Open-Meteo.</string>
+	<string>Nimbus uses an approximate, city-scale location for My Location to fetch a forecast. Precise GPS is not requested.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Nimbus uses your location only to fetch the local weather forecast from Open-Meteo.</string>
+	<string>Nimbus uses an approximate, city-scale location for My Location to fetch a forecast. Precise GPS is not requested.</string>
 	<key>NSSupportsAutomaticTermination</key>
 	<true/>
 	<key>NSSupportsSuddenTermination</key>

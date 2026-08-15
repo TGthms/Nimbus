@@ -90,3 +90,20 @@ public enum PopularCities {
         }
     }
 }
+
+/// My Location never keeps or transmits a street-level fix.
+public enum LocationPrivacy {
+    /// About 1.1 km at the equator — enough for a city forecast.
+    public static let gridDegrees = 0.01
+
+    public static func approximate(
+        latitude: Double,
+        longitude: Double,
+        gridDegrees: Double = gridDegrees
+    ) -> (latitude: Double, longitude: Double) {
+        func snap(_ value: Double) -> Double {
+            (value / gridDegrees).rounded() * gridDegrees
+        }
+        return (snap(latitude), snap(longitude))
+    }
+}

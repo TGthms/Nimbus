@@ -59,7 +59,9 @@ struct SidebarView: View {
         .padding(.vertical, 8)
         .background(RoundedRectangle(cornerRadius: 10, style: .continuous).fill(.quaternary.opacity(0.5)))
         .padding(12)
-        .onAppear { /* keep ready */ }
+        .onChange(of: model.searchFocusTick) { _, _ in
+            searchFocused = true
+        }
     }
 
     private var showsSearchResults: Bool {
@@ -75,7 +77,8 @@ struct SidebarView: View {
                     summary: model.summaries[place.id],
                     selected: model.selectedPlaceID == place.id,
                     units: model.units,
-                    authorized: model.location.isAuthorized
+                    authorized: model.location.isAuthorized,
+                    language: model.language
                 ) {
                     if !model.location.isAuthorized {
                         model.location.request()
@@ -91,7 +94,7 @@ struct SidebarView: View {
         return VStack(alignment: .leading, spacing: 6) {
             sectionLabel(model.t("cities"))
             if saved.isEmpty {
-                Text("Search any city and tap Add.")
+                Text(model.t("search_add_hint"))
                     .font(.callout)
                     .foregroundStyle(.secondary)
                     .padding(.vertical, 8)
@@ -102,7 +105,8 @@ struct SidebarView: View {
                     summary: model.summaries[place.id],
                     selected: model.selectedPlaceID == place.id,
                     units: model.units,
-                    authorized: true
+                    authorized: true,
+                    language: model.language
                 ) {
                     model.select(place)
                 }
@@ -147,16 +151,16 @@ struct SidebarView: View {
         VStack(alignment: .leading, spacing: 8) {
             let popularHits = PopularCities.matching(model.searchText)
             if !popularHits.isEmpty && model.searchResults.isEmpty {
-                sectionLabel("Popular matches")
+                sectionLabel(model.t("popular_matches"))
                 ForEach(popularHits) { place in
                     searchAddRow(title: place.name, subtitle: place.subtitle) {
                         model.addPopular(place)
                     }
                 }
             }
-            sectionLabel("Search results")
+            sectionLabel(model.t("search_results"))
             if model.searchResults.isEmpty && !model.isSearching {
-                Text("No cities found.")
+                Text(model.t("no_cities_found"))
                     .foregroundStyle(.secondary)
                     .font(.callout)
             }
@@ -206,39 +210,41 @@ struct PlaceRow: View {
     var selected: Bool
     var units: UnitPreferences
     var authorized: Bool
+    var language: AppLanguage = .english
     var action: () -> Void
 
     var body: some View {
         Button(action: action) {
             HStack(spacing: 10) {
                 Image(systemName: place.isCurrentLocation ? "location.fill" : summary?.condition.symbolName(isDay: summary?.isDay ?? true) ?? "building.2")
-                    .foregroundStyle(selected ? .white : .secondary)
+                    .foregroundStyle(selected ? .primary : .secondary)
                     .frame(width: 22)
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(place.isCurrentLocation ? (authorized ? place.name : L10n.string("my_location", language: .english)) : place.name)
+                    Text(place.isCurrentLocation ? (authorized ? place.name : L10n.string("my_location", language: language)) : place.name)
                         .font(.body.weight(.medium))
-                        .foregroundStyle(selected ? .white : .primary)
+                        .foregroundStyle(.primary)
                         .lineLimit(1)
-                    Text(place.isCurrentLocation && !authorized ? "Enable location" : (place.subtitle.isEmpty ? " " : place.subtitle))
+                    Text(place.isCurrentLocation && !authorized ? L10n.string("enable_location", language: language) : (place.subtitle.isEmpty ? " " : place.subtitle))
                         .font(.caption)
-                        .foregroundStyle(selected ? .white.opacity(0.75) : .secondary)
+                        .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
                 Spacer()
                 if let temp = summary?.temperature {
                     Text(WeatherFormatting.temperature(temp, unit: units.temperature))
                         .font(.body.monospacedDigit().weight(.semibold))
-                        .foregroundStyle(selected ? .white : .primary)
+                        .foregroundStyle(.primary)
                 }
             }
             .padding(.horizontal, 8)
             .padding(.vertical, 8)
             .background(
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(selected ? Color.accentColor.opacity(0.85) : Color.clear)
+                    .fill(selected ? Color.primary.opacity(0.12) : Color.clear)
             )
             .contentShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
         }
         .buttonStyle(.plain)
+        .accessibilityAddTraits(selected ? .isSelected : [])
     }
 }

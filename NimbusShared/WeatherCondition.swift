@@ -102,37 +102,41 @@ public enum WeatherCondition: String, Sendable, Codable, Hashable, CaseIterable 
         }
     }
 
-    public func phrase(isDay: Bool) -> String {
+    public func phrase(isDay: Bool, language: AppLanguage = .english) -> String {
+        L10n.string(phraseKey(isDay: isDay), language: language)
+    }
+
+    public func phraseKey(isDay: Bool) -> String {
         switch self {
-        case .clear: return isDay ? "Clear" : "Clear Night"
-        case .mainlyClear: return isDay ? "Mostly Clear" : "Mostly Clear Night"
-        case .partlyCloudy: return "Partly Cloudy"
-        case .overcast: return "Overcast"
-        case .fog: return "Fog"
-        case .depositingRimeFog: return "Rime Fog"
-        case .lightDrizzle: return "Light Drizzle"
-        case .drizzle: return "Drizzle"
-        case .denseDrizzle: return "Dense Drizzle"
-        case .lightFreezingDrizzle: return "Light Freezing Drizzle"
-        case .denseFreezingDrizzle: return "Freezing Drizzle"
-        case .slightRain: return "Light Rain"
-        case .rain: return "Rain"
-        case .heavyRain: return "Heavy Rain"
-        case .lightFreezingRain: return "Light Freezing Rain"
-        case .heavyFreezingRain: return "Freezing Rain"
-        case .slightSnow: return "Light Snow"
-        case .snow: return "Snow"
-        case .heavySnow: return "Heavy Snow"
-        case .snowGrains: return "Snow Grains"
-        case .slightRainShowers: return "Light Showers"
-        case .rainShowers: return "Showers"
-        case .violentRainShowers: return "Violent Showers"
-        case .slightSnowShowers: return "Light Snow Showers"
-        case .heavySnowShowers: return "Snow Showers"
-        case .thunderstorm: return "Thunderstorm"
-        case .thunderstormSlightHail: return "Thunderstorm with Hail"
-        case .thunderstormHeavyHail: return "Severe Thunderstorm"
-        case .unknown: return "—"
+        case .clear: return isDay ? "cond_clear" : "cond_clear_night"
+        case .mainlyClear: return isDay ? "cond_mostly_clear" : "cond_mostly_clear_night"
+        case .partlyCloudy: return "cond_partly_cloudy"
+        case .overcast: return "cond_overcast"
+        case .fog: return "cond_fog"
+        case .depositingRimeFog: return "cond_rime_fog"
+        case .lightDrizzle: return "cond_light_drizzle"
+        case .drizzle: return "cond_drizzle"
+        case .denseDrizzle: return "cond_dense_drizzle"
+        case .lightFreezingDrizzle: return "cond_light_freezing_drizzle"
+        case .denseFreezingDrizzle: return "cond_freezing_drizzle"
+        case .slightRain: return "cond_light_rain"
+        case .rain: return "cond_rain"
+        case .heavyRain: return "cond_heavy_rain"
+        case .lightFreezingRain: return "cond_light_freezing_rain"
+        case .heavyFreezingRain: return "cond_freezing_rain"
+        case .slightSnow: return "cond_light_snow"
+        case .snow: return "cond_snow"
+        case .heavySnow: return "cond_heavy_snow"
+        case .snowGrains: return "cond_snow_grains"
+        case .slightRainShowers: return "cond_light_showers"
+        case .rainShowers: return "cond_showers"
+        case .violentRainShowers: return "cond_violent_showers"
+        case .slightSnowShowers: return "cond_light_snow_showers"
+        case .heavySnowShowers: return "cond_snow_showers"
+        case .thunderstorm: return "cond_thunderstorm"
+        case .thunderstormSlightHail: return "cond_tstorm_hail"
+        case .thunderstormHeavyHail: return "cond_severe_tstorm"
+        case .unknown: return "emdash"
         }
     }
 
@@ -238,14 +242,20 @@ public enum UVCategory: String, Sendable {
         }
     }
 
-    public var title: String {
+    public var localizationKey: String {
         switch self {
-        case .low: return "Low"
-        case .moderate: return "Moderate"
-        case .high: return "High"
-        case .veryHigh: return "Very High"
-        case .extreme: return "Extreme"
+        case .low: return "uv_low"
+        case .moderate: return "uv_moderate"
+        case .high: return "uv_high"
+        case .veryHigh: return "uv_very_high"
+        case .extreme: return "uv_extreme"
         }
+    }
+
+    public var title: String { title(language: .english) }
+
+    public func title(language: AppLanguage) -> String {
+        L10n.string(localizationKey, language: language)
     }
 
     public var color: Color {
@@ -273,26 +283,30 @@ public enum AQICategory: String, Sendable {
         }
     }
 
-    public var title: String {
+    public var localizationKey: String {
         switch self {
-        case .good: return "Good"
-        case .moderate: return "Moderate"
-        case .unhealthySensitive: return "Unhealthy for Sensitive Groups"
-        case .unhealthy: return "Unhealthy"
-        case .veryUnhealthy: return "Very Unhealthy"
-        case .hazardous: return "Hazardous"
+        case .good: return "aqi_good"
+        case .moderate: return "aqi_moderate"
+        case .unhealthySensitive: return "aqi_sensitive"
+        case .unhealthy: return "aqi_unhealthy"
+        case .veryUnhealthy: return "aqi_very_unhealthy"
+        case .hazardous: return "aqi_hazardous"
         }
     }
 
-    public var shortTitle: String {
-        switch self {
-        case .good: return "Good"
-        case .moderate: return "Moderate"
-        case .unhealthySensitive: return "Sensitive"
-        case .unhealthy: return "Unhealthy"
-        case .veryUnhealthy: return "Very Unhealthy"
-        case .hazardous: return "Hazardous"
+    public var title: String { title(language: .english) }
+
+    public func title(language: AppLanguage) -> String {
+        if self == .unhealthySensitive {
+            return L10n.string("aqi_sensitive_full", language: language)
         }
+        return L10n.string(localizationKey, language: language)
+    }
+
+    public var shortTitle: String { shortTitle(language: .english) }
+
+    public func shortTitle(language: AppLanguage) -> String {
+        L10n.string(localizationKey, language: language)
     }
 
     public var color: Color {

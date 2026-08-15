@@ -3,22 +3,28 @@ import SwiftUI
 struct WeatherSceneView: View {
     var recipe: SceneRecipe
     var isActive: Bool = true
+    var overlayPresented: Bool = false
     var motionPreference: MotionPreference = .followSystem
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var animate: Bool {
-        isActive && MotionPolicy.allowsDynamicMotion(systemReduceMotion: reduceMotion, preference: motionPreference)
+        MotionPolicy.shouldAnimateScene(
+            windowActive: isActive,
+            overlayPresented: overlayPresented,
+            systemReduceMotion: reduceMotion,
+            preference: motionPreference
+        )
     }
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: animate ? 1.0 / 12.0 : 1.0, paused: !animate)) { timeline in
+        TimelineView(.animation(minimumInterval: animate ? 1.0 / 8.0 : 120, paused: !animate)) { timeline in
             Canvas { context, size in
                 SceneCompositor.draw(
                     context: &context,
                     size: size,
                     recipe: recipe,
-                    time: timeline.date.timeIntervalSinceReferenceDate,
+                    time: animate ? timeline.date.timeIntervalSinceReferenceDate : 0,
                     reduceMotion: !animate
                 )
             }
@@ -116,7 +122,7 @@ enum SceneCompositor {
     private static func drawSunRays(context: inout GraphicsContext, size: CGSize, recipe: SceneRecipe, time: TimeInterval) {
         let p = sunPoint(size: size, recipe: recipe)
         let spin = time * 0.04
-        let count = 10
+        let count = 8
         for i in 0..<count {
             let angle = Double(i) / Double(count) * .pi * 2 + spin
             var path = Path()
@@ -154,16 +160,32 @@ enum SceneCompositor {
         }
     }
 
-    private static func drawStars(context: inout GraphicsContext, size: CGSize, recipe: SceneRecipe, time: TimeInterval, reduceMotion: Bool) {
-        let density = Int(80 * (1 - recipe.cloudCover * 0.85))
+    private static let cachedStars: [StarSpec] = {
         var rng = SplitGenerator(seed: 77)
-        for i in 0..<density {
-            let x = rng.next() * size.width
-            let y = rng.next() * size.height * 0.62
-            let twinkle = reduceMotion ? 1.0 : 0.65 + 0.35 * sin(time * (0.6 + rng.next()) + Double(i))
-            let s = 0.6 + rng.next() * 1.4
-            context.opacity = twinkle * (1 - recipe.cloudCover * 0.7)
-            context.fill(Path(ellipseIn: CGRect(x: x, y: y, width: s, height: s)), with: .color(.white))
+        return (0..<36).map { _ in
+            StarSpec(
+                x: rng.next(),
+                y: rng.next() * 0.62,
+                size: 0.6 + rng.next() * 1.3,
+                phase: rng.next() * .pi * 2,
+                speed: 0.45 + rng.next() * 0.5
+            )
+        }
+    }()
+
+    private static func drawStars(context: inout GraphicsContext, size: CGSize, recipe: SceneRecipe, time: TimeInterval, reduceMotion: Bool) {
+        let dim = 1 - recipe.cloudCover * 0.7
+        guard dim > 0.05 else { return }
+        let visible = Int(Double(cachedStars.count) * (1 - recipe.cloudCover * 0.85))
+        for i in 0..<visible {
+            let star = cachedStars[i]
+            let twinkle = reduceMotion ? 1.0 : 0.7 + 0.3 * sin(time * star.speed + star.phase)
+            context.opacity = twinkle * dim
+            let s = star.size
+            context.fill(
+                Path(ellipseIn: CGRect(x: star.x * size.width, y: star.y * size.height, width: s, height: s)),
+                with: .color(.white)
+            )
         }
         context.opacity = 1
     }
@@ -181,7 +203,7 @@ enum SceneCompositor {
         reduceMotion: Bool
     ) {
         guard cover > 0.04 else { return }
-        let count = Int(3 + cover * 7)
+        let count = Int(2 + cover * 5)
         let wind = recipe.windSpeed
         let drift = reduceMotion ? 0 : time * (speed + wind * 0.15)
         var rng = SplitGenerator(seed: UInt64(y * 13))
@@ -202,7 +224,7 @@ enum SceneCompositor {
     }
 
     private static func drawRain(context: inout GraphicsContext, size: CGSize, recipe: SceneRecipe, time: TimeInterval) {
-        let count = Int(18 + min(recipe.precipRate, 2) * 22)
+        let count = Int(10 + min(recipe.precipRate, 2) * 12)
         let shear = CGFloat(sin(recipe.windDirection * .pi / 180) * min(recipe.windSpeed, 40) * 0.6)
         var rng = SplitGenerator(seed: 3)
         for i in 0..<count {
@@ -219,7 +241,7 @@ enum SceneCompositor {
     }
 
     private static func drawSnow(context: inout GraphicsContext, size: CGSize, recipe: SceneRecipe, time: TimeInterval) {
-        let count = Int(16 + min(recipe.precipRate, 2) * 18)
+        let count = Int(10 + min(recipe.precipRate, 2) * 10)
         var rng = SplitGenerator(seed: 9)
         for i in 0..<count {
             let speed = 40.0 + rng.next() * 50
@@ -269,6 +291,14 @@ enum SceneCompositor {
         bolt.addLine(to: CGPoint(x: x - 22, y: size.height * 0.46))
         context.stroke(bolt, with: .color(Color.white.opacity(0.85 * flash)), lineWidth: 2)
     }
+}
+
+private struct StarSpec {
+    var x: Double
+    var y: Double
+    var size: CGFloat
+    var phase: Double
+    var speed: Double
 }
 
 struct SplitGenerator {

@@ -113,6 +113,7 @@ final class LocaleMotionL10nTests: XCTestCase {
         XCTAssertEqual(L10n.string("done", language: .japanese), "完了")
         XCTAssertEqual(L10n.string("sounding", language: .english), "Sounding")
         XCTAssertEqual(L10n.string("settings", language: .chineseSimplified), "设置")
+        XCTAssertEqual(L10n.string("location_privacy", language: .english), "My Location uses approximate location only — about a kilometer, not precise GPS. That coarse position is what Nimbus stores and sends to Open-Meteo.")
         XCTAssertEqual(L10n.string("sunrise", language: .english), "Sunrise")
         XCTAssertEqual(L10n.string("sunset", language: .english), "Sunset")
         XCTAssertNotEqual(L10n.string("sunrise", language: .english), L10n.string("today", language: .english))
@@ -121,6 +122,81 @@ final class LocaleMotionL10nTests: XCTestCase {
             XCTAssertNotEqual(L10n.string("sunrise", language: language), "sunrise", "\(language)")
             XCTAssertNotEqual(L10n.string("sunset", language: language), "sunset", "\(language)")
         }
+    }
+
+    func testSceneMotionPausesWhenOverlayOrInactive() {
+        XCTAssertFalse(
+            MotionPolicy.shouldAnimateScene(
+                windowActive: false,
+                overlayPresented: false,
+                systemReduceMotion: false,
+                preference: .followSystem
+            )
+        )
+        XCTAssertFalse(
+            MotionPolicy.shouldAnimateScene(
+                windowActive: true,
+                overlayPresented: true,
+                systemReduceMotion: false,
+                preference: .followSystem
+            )
+        )
+        XCTAssertTrue(
+            MotionPolicy.shouldAnimateScene(
+                windowActive: true,
+                overlayPresented: false,
+                systemReduceMotion: false,
+                preference: .followSystem
+            )
+        )
+        XCTAssertFalse(
+            MotionPolicy.shouldAnimateScene(
+                windowActive: true,
+                overlayPresented: false,
+                systemReduceMotion: true,
+                preference: .followSystem
+            )
+        )
+        XCTAssertTrue(
+            MotionPolicy.shouldAnimateScene(
+                windowActive: true,
+                overlayPresented: false,
+                systemReduceMotion: true,
+                preference: .always
+            )
+        )
+    }
+
+    func testSolidSurfacesFollowTransparencyAndContrast() {
+        XCTAssertFalse(MotionPolicy.prefersSolidSurfaces(reduceTransparency: false, increaseContrast: false))
+        XCTAssertTrue(MotionPolicy.prefersSolidSurfaces(reduceTransparency: true, increaseContrast: false))
+        XCTAssertTrue(MotionPolicy.prefersSolidSurfaces(reduceTransparency: false, increaseContrast: true))
+    }
+
+    func testConditionPhrasesAndChromeKeysLocalizeThroughL10n() {
+        let keys = [
+            "high_abbrev", "low_abbrev", "search_add_hint", "similar_temperature",
+            "cond_clear", "cond_partly_cloudy", "uv_low", "aqi_good", "hide_inspector", "location_privacy"
+        ]
+        for key in keys {
+            for language in AppLanguage.displayOrder {
+                let value = L10n.string(key, language: language)
+                XCTAssertFalse(value.isEmpty, "\(language) \(key)")
+                XCTAssertNotEqual(value, key, "\(language) \(key)")
+            }
+        }
+        XCTAssertEqual(WeatherCondition.clear.phrase(isDay: true), "Clear")
+        XCTAssertEqual(WeatherCondition.clear.phraseKey(isDay: true), "cond_clear")
+        XCTAssertEqual(WeatherCondition.clear.phrase(isDay: true, language: .japanese), "快晴")
+        XCTAssertEqual(WeatherCondition.partlyCloudy.phrase(isDay: true), "Partly Cloudy")
+        XCTAssertNotEqual(
+            WeatherCondition.clear.phrase(isDay: true, language: .french),
+            WeatherCondition.clear.phrase(isDay: true)
+        )
+        XCTAssertEqual(UVCategory(index: 1).title(language: .english), "Low")
+        XCTAssertEqual(AQICategory(usAQI: 20).shortTitle(language: .english), "Good")
+        XCTAssertEqual(AQICategory(usAQI: 140).title(language: .english), "Unhealthy for Sensitive Groups")
+        XCTAssertEqual(AQICategory(usAQI: 140).shortTitle(language: .english), "Sensitive")
     }
 
     func testDisplayOrderIsConventionalNotRequestOrder() {

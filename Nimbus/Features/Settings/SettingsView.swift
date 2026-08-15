@@ -67,6 +67,9 @@ struct SettingsView: View {
                     Text(model.t("data_blurb"))
                         .font(.callout)
                         .foregroundStyle(.secondary)
+                    Text(model.t("location_privacy"))
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
                     Link("Open-Meteo", destination: URL(string: "https://open-meteo.com/")!)
                 }
             }

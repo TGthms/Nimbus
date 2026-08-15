@@ -11,7 +11,7 @@ struct HeroView: View {
             Text(snapshot.place.isCurrentLocation ? L10n.string("my_location", language: language) : snapshot.place.name)
                 .font(.system(size: 34, weight: .semibold, design: .default))
                 .tracking(-0.4)
-            Text(snapshot.current.condition.phrase(isDay: snapshot.current.isDay))
+            Text(snapshot.current.condition.phrase(isDay: snapshot.current.isDay, language: language))
                 .font(.title3.weight(.medium))
                 .opacity(0.86)
             HStack(alignment: .firstTextBaseline, spacing: 16) {
@@ -21,10 +21,10 @@ struct HeroView: View {
                     .minimumScaleFactor(0.5)
                 VStack(alignment: .leading, spacing: 4) {
                     if let today = snapshot.today {
-                        Text("H:\(WeatherFormatting.temperature(today.temperatureMax, unit: units.temperature))  L:\(WeatherFormatting.temperature(today.temperatureMin, unit: units.temperature))")
+                        Text("\(L10n.string("high_abbrev", language: language)):\(WeatherFormatting.temperature(today.temperatureMax, unit: units.temperature))  \(L10n.string("low_abbrev", language: language)):\(WeatherFormatting.temperature(today.temperatureMin, unit: units.temperature))")
                             .font(.title3.weight(.semibold).monospacedDigit())
                     }
-                    Text("Feels like \(WeatherFormatting.temperature(snapshot.current.apparentTemperature, unit: units.temperature))")
+                    Text("\(L10n.string("feels_like", language: language)) \(WeatherFormatting.temperature(snapshot.current.apparentTemperature, unit: units.temperature))")
                         .font(.callout)
                         .opacity(0.8)
                 }
@@ -38,6 +38,7 @@ struct HeroView: View {
         .padding(.top, 28)
         .padding(.horizontal, 28)
         .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
     }
 }
 

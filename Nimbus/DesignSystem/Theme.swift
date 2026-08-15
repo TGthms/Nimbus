@@ -41,12 +41,20 @@ struct GlassBackground: ViewModifier {
     var material: Material = .ultraThinMaterial
     var radius: CGFloat = NimbusTheme.moduleRadius
 
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @Environment(\.colorSchemeContrast) private var contrast
+
     func body(content: Content) -> some View {
+        let solid = MotionPolicy.prefersSolidSurfaces(
+            reduceTransparency: reduceTransparency,
+            increaseContrast: contrast == .increased
+        )
+        let fill: Material = solid ? .regularMaterial : material
         content
-            .background(material, in: RoundedRectangle(cornerRadius: radius, style: .continuous))
+            .background(fill, in: RoundedRectangle(cornerRadius: radius, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: radius, style: .continuous)
-                    .strokeBorder(.white.opacity(0.18), lineWidth: 1)
+                    .strokeBorder(.white.opacity(solid ? 0.34 : 0.18), lineWidth: solid ? 1.2 : 1)
             )
     }
 }

@@ -18,7 +18,8 @@ final class LocationProvider: NSObject, ObservableObject, CLLocationManagerDeleg
         authorization = manager.authorizationStatus
         super.init()
         manager.delegate = self
-        manager.desiredAccuracy = kCLLocationAccuracyKilometer
+        manager.desiredAccuracy = kCLLocationAccuracyReduced
+        manager.distanceFilter = 1000
     }
 
     var isAuthorized: Bool {
@@ -49,10 +50,14 @@ final class LocationProvider: NSObject, ObservableObject, CLLocationManagerDeleg
 
     nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
-        let coordinate = location.coordinate
+        let coarse = LocationPrivacy.approximate(
+            latitude: location.coordinate.latitude,
+            longitude: location.coordinate.longitude
+        )
+        let snapped = CLLocation(latitude: coarse.latitude, longitude: coarse.longitude)
         Task { @MainActor in
-            self.coordinate = coordinate
-            await self.reverseGeocode(location)
+            self.coordinate = snapped.coordinate
+            await self.reverseGeocode(snapped)
         }
     }
 
@@ -79,8 +84,9 @@ final class LocationProvider: NSObject, ObservableObject, CLLocationManagerDeleg
     func currentPlace(existing: Place) -> Place {
         var place = existing
         if let coordinate {
-            place.latitude = coordinate.latitude
-            place.longitude = coordinate.longitude
+            let coarse = LocationPrivacy.approximate(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            place.latitude = coarse.latitude
+            place.longitude = coarse.longitude
         }
         if let resolvedName { place.name = resolvedName }
         if let resolvedAdmin { place.admin1 = resolvedAdmin }

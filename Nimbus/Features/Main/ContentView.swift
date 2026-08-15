@@ -91,6 +91,9 @@ struct ContentView: View {
             scene
             if let snapshot = model.selectedSnapshot {
                 forecastStack(snapshot)
+                    .scaleEffect(model.expandedModule == nil ? 1 : (allowsMotion ? 0.985 : 1))
+                    .opacity(model.expandedModule == nil ? 1 : 0.78)
+                    .allowsHitTesting(model.expandedModule == nil)
                     .transition(.opacity.combined(with: .offset(y: allowsMotion ? 10 : 0)))
             } else {
                 emptyState
@@ -131,6 +134,7 @@ struct ContentView: View {
             WeatherSceneView(
                 recipe: snapshot.sceneRecipe,
                 isActive: scenePhase == .active,
+                overlayPresented: model.expandedModule != nil,
                 motionPreference: model.settings.motion
             )
         } else {
@@ -194,6 +198,9 @@ struct ContentView: View {
                     .font(.largeTitle)
                 Text(model.t("location_needed"))
                     .font(.title2.weight(.semibold))
+                Text(model.t("location_privacy"))
+                    .font(.callout)
+                    .opacity(0.8)
                 Button(model.t("enable_location")) { model.location.request() }
                     .buttonStyle(.borderedProminent)
                     .padding(.top, 6)

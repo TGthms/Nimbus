@@ -45,9 +45,6 @@ struct ModuleCard: View {
                     Text(L10n.string(module.localizationKey, language: language).uppercased())
                         .tracking(0.6)
                     Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.caption2.weight(.bold))
-                        .opacity(0.55)
                 }
                 .font(.caption.weight(.semibold))
                 .opacity(0.7)
@@ -62,6 +59,7 @@ struct ModuleCard: View {
         }
         .buttonStyle(ScalePressStyle())
         .accessibilityLabel(L10n.string(module.localizationKey, language: language))
+        .accessibilityAddTraits(.isButton)
     }
 }
 
@@ -100,7 +98,7 @@ struct ModuleHeader: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(uvText)
                     .font(.title.weight(.semibold).monospacedDigit())
-                Text(UVCategory(index: c.uvIndex ?? today?.uvIndexMax ?? 0).title)
+                Text(UVCategory(index: c.uvIndex ?? today?.uvIndexMax ?? 0).title(language: language))
                     .font(.callout.weight(.medium))
                     .foregroundStyle(UVCategory(index: c.uvIndex ?? today?.uvIndexMax ?? 0).color)
             }
@@ -149,7 +147,7 @@ struct ModuleHeader: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(aqi.flatMap { $0.usAQI ?? $0.europeanAQI }.map { "\(Int($0.rounded()))" } ?? "—")
                     .font(.title.weight(.semibold).monospacedDigit())
-                Text(aqi?.category.shortTitle ?? "—")
+                Text(aqi?.category.shortTitle(language: language) ?? "—")
                     .font(.callout.weight(.medium))
                     .foregroundStyle(aqi?.category.color ?? .secondary)
             }
@@ -167,14 +165,14 @@ struct ModuleHeader: View {
         guard let actual = c.temperature, let feel = c.apparentTemperature else { return " " }
         if feel > actual + 1 { return L10n.string("humidity", language: language) }
         if feel < actual - 1 { return L10n.string("wind", language: language) }
-        return " "
+        return L10n.string("similar_temperature", language: language)
     }
 
     private var visibilityWord: String {
         guard let v = snapshot.current.visibility else { return " " }
         switch v {
-        case ..<1000: return "—"
-        case ..<4000: return "—"
+        case ..<1000: return L10n.string("visibility_poor", language: language)
+        case ..<4000: return L10n.string("visibility_haze", language: language)
         default: return L10n.string("clear", language: language)
         }
     }
@@ -213,7 +211,7 @@ struct ModuleDetailOverlay: View {
 
     var body: some View {
         ZStack {
-            Color.black.opacity(0.38)
+            Color.black.opacity(0.42)
                 .ignoresSafeArea()
                 .onTapGesture(perform: onDismiss)
 
@@ -254,6 +252,7 @@ struct ModuleDetailOverlay: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .clipped()
+        .accessibilityAddTraits(.isModal)
         .transition(.opacity.combined(with: .scale(scale: 0.96, anchor: .center)))
     }
 
@@ -302,7 +301,7 @@ struct ModuleDetailOverlay: View {
         switch module {
         case .airQuality:
             if let aq = snapshot.airQuality {
-                Text(aq.category.title)
+                Text(aq.category.title(language: language))
             }
         default:
             EmptyView()

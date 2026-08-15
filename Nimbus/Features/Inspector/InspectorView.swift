@@ -76,7 +76,7 @@ struct InspectorView: View {
         .overlay(alignment: .leading) {
             Rectangle().fill(.white.opacity(0.08)).frame(width: 1)
         }
-        .task(id: "\(model.selectedPlaceID)-\(model.inspectorVisible)-\(model.inspectorTab.rawValue)") {
+        .task(id: "\(model.selectedPlaceID)-\(model.inspectorVisible)") {
             await model.loadInspectorIfNeeded()
         }
     }

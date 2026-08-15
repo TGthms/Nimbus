@@ -78,6 +78,36 @@ final class OpenMeteoClientTests: XCTestCase {
         XCTAssertEqual(snapshot.current.condition.phrase(isDay: true), "Partly Cloudy")
     }
 
+    func testSnapshotPastTTLIsStaleSoRefreshCanReplace() throws {
+        let decoded = try OpenMeteoClient().snapshot(
+            fromForecastJSON: Data(Self.forecastFixture.utf8),
+            place: PopularCities.seeds.first(where: { $0.name == "Tokyo" })!
+        )
+        let now = Date(timeIntervalSince1970: 1_700_000_000)
+        let fresh = WeatherSnapshot(
+            place: decoded.place,
+            fetchedAt: now,
+            current: decoded.current,
+            hourly: decoded.hourly,
+            daily: decoded.daily,
+            timezone: decoded.timezone
+        )
+        XCTAssertFalse(fresh.isStale(ttl: 15 * 60, now: now))
+        XCTAssertFalse(fresh.isStale(ttl: 15 * 60, now: now.addingTimeInterval(15 * 60)))
+        XCTAssertTrue(fresh.isStale(ttl: 15 * 60, now: now.addingTimeInterval(15 * 60 + 1)))
+
+        let expired = WeatherSnapshot(
+            place: decoded.place,
+            fetchedAt: now.addingTimeInterval(-16 * 60),
+            current: decoded.current,
+            hourly: decoded.hourly,
+            daily: decoded.daily,
+            timezone: decoded.timezone
+        )
+        XCTAssertTrue(expired.isStale(ttl: 15 * 60, now: now))
+        XCTAssertFalse(expired.isStale(ttl: 45 * 60, now: now))
+    }
+
     func testDecodeGeocodingFixtureThroughClient() throws {
         let results = try OpenMeteoClient().places(fromGeocodingJSON: Data(Self.geocodingFixture.utf8))
         XCTAssertEqual(results.count, 2)

@@ -28,7 +28,7 @@ Motion follows **Reduce Motion**. You can force animation on or off in Settings.
 
 ## Data
 
-Forecasts, air quality, geocoding, and ensemble mean come from Open-Meteo. Non-commercial public API, no key. Location is sent only as coordinates.
+Forecasts, air quality, geocoding, and ensemble mean come from Open-Meteo. Non-commercial public API, no key. **My Location** uses approximate (about 1 km) coordinates only — not precise GPS — and that coarsened position is what is stored and sent to Open-Meteo.
 
 ## Tests
 

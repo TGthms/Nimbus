@@ -15,19 +15,21 @@ struct NimbusApp: App {
         .defaultSize(width: 1280, height: 800)
         .commands {
             CommandGroup(replacing: .newItem) {}
-            CommandMenu("Location") {
-                Button("Previous City") { model.previousPlace() }
+            CommandMenu(model.t("location")) {
+                Button(model.t("previous_city")) { model.previousPlace() }
                     .keyboardShortcut("[", modifiers: [.command])
-                Button("Next City") { model.nextPlace() }
+                Button(model.t("next_city")) { model.nextPlace() }
                     .keyboardShortcut("]", modifiers: [.command])
                 Divider()
-                Button("Refresh") {
+                Button(model.t("refresh")) {
                     Task { await model.refreshSelected(force: true) }
                 }
                 .keyboardShortcut("r", modifiers: [.command])
+                Button(model.t("search_cities")) { model.focusSearch() }
+                    .keyboardShortcut("f", modifiers: [.command])
             }
             CommandGroup(after: .sidebar) {
-                Button(model.inspectorVisible ? "Hide Inspector" : "Show Inspector") {
+                Button(model.inspectorVisible ? model.t("hide_inspector") : model.t("show_inspector")) {
                     model.inspectorVisible.toggle()
                 }
                 .keyboardShortcut("i", modifiers: [.command])

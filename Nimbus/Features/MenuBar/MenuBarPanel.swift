@@ -28,7 +28,7 @@ struct MenuBarPanel: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(snap.place.displayName)
                             .font(.headline)
-                        Text(snap.current.condition.phrase(isDay: snap.current.isDay))
+                        Text(snap.current.condition.phrase(isDay: snap.current.isDay, language: model.language))
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
@@ -36,8 +36,8 @@ struct MenuBarPanel: View {
                         .font(.system(size: 36, weight: .medium, design: .rounded))
                 }
                 HStack {
-                    Text("H:\(WeatherFormatting.temperature(snap.today?.temperatureMax, unit: model.units.temperature))")
-                    Text("L:\(WeatherFormatting.temperature(snap.today?.temperatureMin, unit: model.units.temperature))")
+                    Text("\(model.t("high_abbrev")):\(WeatherFormatting.temperature(snap.today?.temperatureMax, unit: model.units.temperature))")
+                    Text("\(model.t("low_abbrev")):\(WeatherFormatting.temperature(snap.today?.temperatureMin, unit: model.units.temperature))")
                     Spacer()
                     Text(WeatherFormatting.relativeUpdated(from: snap.fetchedAt))
                         .foregroundStyle(.secondary)
@@ -56,7 +56,7 @@ struct MenuBarPanel: View {
                     }
                 }
             } else {
-                Text("Weather will appear once a city has loaded.")
+                Text(model.t("waiting_forecast"))
                     .foregroundStyle(.secondary)
             }
 

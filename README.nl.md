@@ -8,4 +8,4 @@ Open `Nimbus.xcodeproj` of de `.app` uit een Release. macOS 15+.
 
 De zijbalk start met **Mijn locatie** en populaire steden. Zoek een andere stad en kies **Voeg toe**. Taal en eenheden volgen het systeem tot je ze wijzigt in Instellingen. **Gereed** sluit het blad. Klik op een tegel voor een overlay.
 
-Data van Open-Meteo, geen API-sleutel.
+Data van Open-Meteo, geen API-sleutel. **Mijn locatie** gebruikt alleen een geschatte positie (~1 km), geen precieze gps.

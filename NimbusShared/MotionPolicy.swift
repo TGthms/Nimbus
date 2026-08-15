@@ -34,4 +34,20 @@ public enum MotionPolicy {
     public static func allowsLightning(systemReduceMotion: Bool, preference: MotionPreference) -> Bool {
         allowsDynamicMotion(systemReduceMotion: systemReduceMotion, preference: preference)
     }
+
+    /// Living sky only while the window is in front and no modal card is up.
+    public static func shouldAnimateScene(
+        windowActive: Bool,
+        overlayPresented: Bool,
+        systemReduceMotion: Bool,
+        preference: MotionPreference
+    ) -> Bool {
+        guard windowActive, !overlayPresented else { return false }
+        return allowsDynamicMotion(systemReduceMotion: systemReduceMotion, preference: preference)
+    }
+
+    /// Reduce Transparency and Increase Contrast both ask for heavier, more opaque surfaces.
+    public static func prefersSolidSurfaces(reduceTransparency: Bool, increaseContrast: Bool) -> Bool {
+        reduceTransparency || increaseContrast
+    }
 }

@@ -4,6 +4,6 @@
 xcuserdata/
 DerivedData/
 *.xcuserstate
-build/Nimbus.app
+build/
 *.zip
 .idea/
